@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cascade Decay Frames</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="vendor/katex/katex.min.css"><link rel="stylesheet" href="style.css">
+  <script src="vendor/katex/katex.min.js"></script>
+  <script type="module" src="app/app.js"></script>
+</head>
+<body>
+<header class="site-header"><h1>Cascade Decay Frames</h1></header>
+<div class="layout">
+<section class="setup panel" id="decay-description">
+  <h2>Decay Description</h2>
+  <form id="event-form" class="dd-grid" novalidate>
+    <div class="dd-left">
+      <h3>Kind of Decay</h3>
+      <label class="field inline">The mother 0 decays into <select id="decay-kind" aria-label="Number of final-state particles"></select></label>
+      <h3>Momenta</h3>
+      <p class="small">Energy and momentum components of the mother 0 and of the final states 1, 2, … in the laboratory frame, in any common unit. The momentum of the mother is the sum of the final states; the mass of every particle follows from its energy and momentum.</p>
+      <div id="mother-card"></div>
+      <div id="daughters"></div>
+      <div class="row-actions"><button type="button" id="build-example" title="Enters random momenta and energies with one decimal for the chosen kind of decay">Build Example</button></div>
+    </div>
+    <div class="dd-right">
+      <div class="topology-head"><h3>Topology</h3>
+        <label class="chain-name">Name of the chain <input id="decay-label" maxlength="16" spellcheck="false" aria-label="Name of the chain of the topology" title="I when there is no reference topology; otherwise II, which can be changed"></label></div>
+      <input id="decay" required spellcheck="false" placeholder="((1 2) 3)" aria-label="Topology of the decay">
+      <div class="small rules">
+        <p>The topology is an ordered binary tree over the numbers 1, 2, … of the final states. Every pair stands in brackets, its two parts are separated by a space, and a part is a number or another pair:</p>
+        <ul><li><code>(1 2)</code> for two final states,</li><li><code>((1 2) 3)</code>: the pair of 1 and 2 first, then 3,</li><li><code>((1 3) (2 4))</code>: two pairs.</li></ul>
+        <p>The first part of a pair is the reference particle, the second the spectator. Every number occurs exactly once.</p>
+      </div>
+      <h3>Reference Topology <small>(optional)</small></h3>
+      <input id="reference" spellcheck="false" placeholder="empty: the topology above is the reference topology I" aria-label="Reference topology">
+      <p class="small">A second topology is the reference topology and gets the label I; the chain of the topology above then gets the name II, which can be changed in the field next to “Topology”. Without a second topology the topology above is the reference topology, named I (the field is grey).</p>
+      <label class="check" title="An explicit additional convention for singular events; it is flagged in the result."><input type="checkbox" id="canonical">Resolve undefined axes by the canonical fallback</label>
+      <button class="primary" id="compute" type="submit">Compute frames</button>
+      <div id="status" role="status" aria-live="polite"></div>
+      <div id="error" role="alert" hidden></div>
+    </div>
+  </form>
+</section>
+<main>
+  <div class="results-header"><div><h2 id="result-title">Loading event</h2><p id="result-subtitle"></p></div></div>
+  <div id="warnings" hidden></div>
+  <div class="tabs" role="tablist" aria-label="Pages">
+    <button class="tab" role="tab" data-tab="dynamic" aria-selected="true">Dynamic view</button>
+    <button class="tab" role="tab" data-tab="notation" aria-selected="false">Notation</button>
+    <button class="tab" role="tab" data-tab="amplitude" aria-selected="false">Amplitude construction</button>
+    <button class="tab" role="tab" data-tab="greenwich" aria-selected="false">Greenwich convention</button>
+    <button class="tab" role="tab" data-tab="next" aria-selected="false" id="tab-next">Next step</button>
+  </div>
+  <section class="page" id="page-dynamic" data-page="dynamic">
+    <div id="animations" class="frames animations"></div>
+  </section>
+  <section class="page" id="page-notation" data-page="notation" hidden>
+    <div class="page-body notation">
+      <h2>Notation of the frame labels</h2>
+      <div class="notation-body">
+        <p>A quantity annotated by <span class="tagx">[<i>v</i>|K]</span> is expressed in the frame <i>v</i>|K, for example <i>p</i><sub>1</sub><sup>[(12)|I]</sup>, the spatial momentum of particle 1 in the frame <span class="tagx">[(12)|I]</span>.</p>
+        <dl>
+          <dt><i>v</i></dt><dd>The vertex whose parent is at rest in this frame. The frame is named by that vertex: <span class="tagx">(12)</span> is the rest frame of the intermediate state (12)<sub class="name">i</sub>, the system of the particles 1<sub class="name">p</sub> and 2<sub class="name">p</sub>. <i>R</i><sub>0</sub><sup>I</sup> is the rest frame of the mother 0<sub class="name">p</sub> with the common root axes oriented by topology I.</dd>
+          <dt>K</dt><dd>The topology, labeled by a Roman numeral, whose ordered transports lead to the frame. <span class="tagx">[R<sub>0</sub><sup>I</sup>|I]</span> and <span class="tagx">[R<sub>0</sub><sup>I</sup>|II]</span> denote identical axes, whereas <span class="tagx">[(12)|I]</span> and <span class="tagx">[(12)|II]</span> may differ.</dd>
+          <dt>lab</dt><dd><span class="tagx">[lab]</span> is the specified starting frame of the event, not an absolute rest frame.</dd>
+          <dt>Axes</dt><dd>The root <i>z</i> axis is the laboratory flight direction of the mother. The root <i>x</i> axis points along the transverse momentum of the first daughter of the reference topology, and <i>y</i> completes a right-handed system. This is the Greenwich convention, and it is the reference topology that fixes it: every other topology uses the same root axes and does not choose an <i>x</i> axis of its own, so the first daughter of a different decay topology generally has a nonzero azimuth in them. The page “Greenwich convention” explains the rotation <i>R</i><sub>z</sub>(−<i>χ</i>) that sets this choice, in analogy to the zero meridian of the Earth. Every later frame inherits its <i>z</i> axis from the momentum direction in its parent frame; the azimuth is not reset.</dd>
+          <dt>Signs</dt><dd>Rotations turn vectors and states, with positive angles. A coordinate system is parametrised by the inverse rotation: to express the momenta in axes that are turned by <i>φ</i> about <i>z</i>, their coordinates are transformed with <i>R</i><sub>z</sub>(−<i>φ</i>), and in the same way with <i>R</i><sub>y</sub>(−<i>ϑ</i>); for a frame that moves with the rapidity <i>η</i> they are boosted with <i>B</i><sub>z</sub>(−<i>η</i>). This is why the steps of the dynamic view carry negative angles and rapidities. The rotation <i>R</i> = <i>R</i><sub>z</sub>(<i>α</i>) <i>R</i><sub>y</sub>(<i>β</i>) <i>R</i><sub>z</sub>(<i>γ</i>) of the page “Next step” is a rotation of vectors and therefore has the positive angles. The section “Euler rotations” on the page “Greenwich convention” explains the convention.</dd>
+          <dt>Angles</dt><dd>For a decay A → B + C, the first daughter B is the reference and C the spectator (the upper and the lower line of the vertex in the sketch of the topology). A particle is written 1<sub class="name">p</sub>, an intermediate state (12)<sub class="name">i</sub>, a vertex (12)<sub class="name">v</sub>, named after everything that is produced there. The angles <i>φ</i><sub>B</sub> and <i>ϑ</i><sub>B</sub> are the azimuth and polar angle of B, and <i>η</i> denotes a rapidity, all measured in the parent frame. A subscript such as 12 denotes the subsystem sum <i>p</i><sub>12</sub> = <i>p</i><sub>1</sub> + <i>p</i><sub>2</sub> in one common frame.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+  <section class="page" id="page-amplitude" data-page="amplitude" hidden></section>
+  <section class="page" id="page-greenwich" data-page="greenwich" hidden></section>
+  <section class="page" id="page-next" data-page="next" hidden></section>
+</main>
+</div>
+</body>
+</html>
