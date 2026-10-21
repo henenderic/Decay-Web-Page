@@ -15,9 +15,9 @@ const el = (tag, attrs = {}, parent = null, text = null) => {
 const f = x => (Math.round(x*10)/10).toString();
 
 /** The point on the circle around `c` with the radius r that lies on the straight line from `from` to the centre. */
-const onCircle = (from, c, r) => { const dx = from.x-c.x, dy = from.y-c.y, d = Math.hypot(dx, dy); return { x: c.x+dx/d*r, y: c.y+dy/d*r }; };
+export const onCircle = (from, c, r) => { const dx = from.x-c.x, dy = from.y-c.y, d = Math.hypot(dx, dy); return { x: c.x+dx/d*r, y: c.y+dy/d*r }; };
 
-function diagram(width, height, label) {
+export function diagram(width, height, label) {
   const svg = el('svg', { viewBox: `0 0 ${width} ${height}`, class: 'blob-diagram', role: 'img', preserveAspectRatio: 'xMidYMid meet', 'aria-label': label });
   const uid = Math.random().toString(36).slice(2, 8);
   const defs = el('defs', {}, svg);
@@ -27,8 +27,11 @@ function diagram(width, height, label) {
   el('rect', { width: 7, height: 7, fill: '#fff' }, pattern);
   el('line', { x1: 0, y1: 0, x2: 0, y2: 7, stroke: HATCH, 'stroke-width': 2.4 }, pattern);
   const line = (a, b, arrow = true) => el('line', { x1: f(a.x), y1: f(a.y), x2: f(b.x), y2: f(b.y), stroke: LINE, 'stroke-width': 2.4, 'marker-end': arrow ? `url(#a${uid})` : null }, svg);
-  const blob = (c, r) => {
+  /** A double line, as in the sketches of the decay chains: an intermediate state. */
+  const double = (a, b) => { for (const [color, width] of [[LINE, 6.4], ['#fff', 2.2]]) el('line', { x1: f(a.x), y1: f(a.y), x2: f(b.x), y2: f(b.y), stroke: color, 'stroke-width': width }, svg); };
+  const blob = (c, r, caption = true) => {
     el('circle', { cx: f(c.x), cy: f(c.y), r, fill: `url(#h${uid})`, stroke: LINE, 'stroke-width': 2.4 }, svg);
+    if (!caption) return;
     const w = 44, h = 20;
     el('rect', { x: f(c.x-w/2), y: f(c.y-h/2), width: w, height: h, rx: 4, fill: '#fff', 'fill-opacity': .92 }, svg);
     el('text', { x: f(c.x), y: f(c.y+5), 'text-anchor': 'middle', 'font-family': FONT, 'font-size': 15, fill: TEXT }, svg, 'Blob');
@@ -39,7 +42,7 @@ function diagram(width, height, label) {
     el('tspan', {}, t, base); if (sub) el('tspan', { dy: 5, 'font-size': 13 }, t, sub);
   };
   const word = (x, y, text, anchor = 'middle') => el('text', { x: f(x), y: f(y), 'text-anchor': anchor, 'font-family': FONT, 'font-size': 16, 'font-style': 'italic', fill: TEXT }, svg, text);
-  return { svg, line, blob, name, word };
+  return { svg, line, double, blob, name, word, el };
 }
 
 /** The positions of the lines of the n final states at the abscissa x, around the ordinate y0; for more than six final states only five lines are drawn, with dots before the last. */
@@ -56,7 +59,7 @@ export function buildProcessDiagram(n) {
   const b1 = { x: 190, y: 160 }, r1 = 50, b2 = { x: 440, y: 90 }, r2 = 42;
   const beam = { x: 30, y: 100 }, target = { x: 30, y: 220 };
   d.line(beam, onCircle(beam, b1, r1)); d.line(target, onCircle(target, b1, r1));
-  d.word(30, 88, 'beam', 'start'); d.word(30, 246, 'target', 'start');
+  d.name(20, 86, 'A', 'p', 'start'); d.name(20, 244, 'B', 'p', 'start');
   d.line(onCircle(b2, b1, r1), onCircle(b1, b2, r2));                                                 // the mother
   d.name(298, 112, '0', 'p');
   const other = { x: 560, y: 262 };
@@ -78,5 +81,34 @@ export function buildDecayBlob(n) {
   names.forEach((nm, k) => { const end = { x: 560, y: ys[k] }; d.line(onCircle(end, c, r), end); d.name(end.x+8, end.y+5, nm, 'p', 'start'); });
   if (dots) d.word(572, (ys[3]+ys[4])/2+6, '⋮', 'middle');
   d.blob(c, r);
+  return d.svg;
+}
+
+/** The three kinds of terms of the potential V for a decay into three particles, as small diagrams: 'direct' (0 into 1, 2, 3 at one vertex), 'production' (0 into the intermediate
+ *  state (12) and 3) and 'decay' (the intermediate state (12) into 1 and 2, while 3 passes by). A hatched dot is a vertex without further structure. */
+export function buildPotentialDiagram(kind) {
+  const labels = { direct: 'Diagram of the direct decay of the mother into three particles', production: 'Diagram of the decay of the mother into the intermediate state of the particles 1 and 2 and the particle 3',
+                   decay: 'Diagram of the decay of the intermediate state into the particles 1 and 2, while the particle 3 passes by' };
+  const d = diagram(240, 150, labels[kind]);
+  const c = { x: 100, y: 75 }, r = 24, xs = 196;
+  if (kind === 'direct') {
+    const start = { x: 14, y: c.y };
+    d.line(start, onCircle(start, c, r)); d.name(52, c.y-10, '0', 'p');
+    [['1', 30], ['2', 75], ['3', 120]].forEach(([nm, y]) => { const end = { x: xs, y }; d.line(onCircle(end, c, r), end); d.name(end.x+8, end.y+5, nm, 'p', 'start'); });
+    d.blob(c, r, false);
+  } else if (kind === 'production') {
+    const start = { x: 14, y: c.y }, up = { x: xs, y: 34 }, down = { x: xs, y: 116 };
+    d.line(start, onCircle(start, c, r)); d.name(52, c.y-10, '0', 'p');
+    d.double(onCircle(up, c, r), up); d.name(up.x+8, up.y+5, '(12)', 'i', 'start');
+    d.line(onCircle(down, c, r), down); d.name(down.x+8, down.y+5, '3', 'p', 'start');
+    d.blob(c, r, false);
+  } else {
+    const top = { x: 100, y: 42 }, start = { x: 14, y: top.y };
+    d.double(start, onCircle(start, top, r)); d.name(40, top.y-12, '(12)', 'i', 'start');
+    [['1', 14], ['2', 70]].forEach(([nm, y]) => { const end = { x: xs, y }; d.line(onCircle(end, top, r), end); d.name(end.x+8, end.y+5, nm, 'p', 'start'); });
+    d.blob(top, r, false);
+    const a = { x: 14, y: 122 }, b = { x: xs, y: 122 };
+    d.line(a, b); d.name(b.x+8, b.y+5, '3', 'p', 'start');
+  }
   return d.svg;
 }

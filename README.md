@@ -34,8 +34,8 @@ http://127.0.0.1:8000/?event={"mother":[9.424309,3.046443,2.084185,2.929122],"fi
 | `index.html`, `style.css` | the page |
 | `core/` | the computation: `kinematics.js` (frames from four-momenta), `alignment.js` (Greenwich axes, Euler angles, transports between two topologies), `scene.js` (momenta of a frame as geometry), `payload.js` (everything the page shows, including the samples of the animation), `linalg.js` (small matrices), `address.js` (start event from the address) |
 | `app/` | start and form (`app.js`, `decay_form.js`) and shared helpers (`common.js`: DOM, formulas through KaTeX, SVG and PNG export) |
-| `render/` | drawing: `drawing.js` (figures of the frames), `sketch.js` (Feynman sketches), `blobs.js` (simplified diagrams), `legend.js`, `tex.js` (markup to TeX), `world.js` (coarse land outlines for the globe, Natural Earth 110m, public domain), `experiments_figure.js` (sketch of the two kinds of experiment) |
-| `pages/` | one folder per page: `dynamic/` (animation and the amplitude row), `amplitude/` (construction of the amplitude), `euler/`, `greenwich/`, `next-step/` |
+| `render/` | drawing: `drawing.js` (figures of the frames), `sketch.js` (Feynman sketches), `blobs.js` (simplified diagrams, also the terms of the potential), `vertex_figure.js` (primary and secondary vertex), `dalitz.js` (schematic Dalitz plot), `legend.js`, `tex.js` (markup to TeX), `world.js` (coarse land outlines for the globe, Natural Earth 110m, public domain), `experiments_figure.js` (sketch of the two kinds of experiment) |
+| `pages/` | one folder per page: `dynamic/` (animation and the amplitude row), `amplitude/` (construction of the amplitude: `page.js` the text, `derivation.js` the single decay and the phase of the spectator, `chain.js` the chain, `terms.js` the terms of the amplitude, shared with the amplitude row of `dynamic/`), `euler/`, `greenwich/`, `next-step/` |
 | `vendor/katex/` | KaTeX 0.16.47 (MIT licence), which sets the formulas |
 
 The conventions of the page are explained on its page *Notation*.

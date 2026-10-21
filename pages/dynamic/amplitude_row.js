@@ -12,8 +12,7 @@
 //   intermediate state R:                   sum over lambda_R, lineshape G_R(s_R)
 import { h, sym, mt, tagNode, texNode, state, up, itl, vtc, named } from '../../app/common.js';
 import { toTex } from '../../render/tex.js';
-
-const MINUS = '−';
+import { MINUS, tag as frameTag, vertexPiece, linePiece, headMarkup } from '../amplitude/terms.js';
 
 export function buildAmplitude({ payload, figs, cum, trans }) {
   const amp = payload.amplitude;
@@ -34,17 +33,7 @@ export function buildAmplitude({ payload, figs, cum, trans }) {
   const term = (id, content, title, text, fresh) => h('span', { class: 'term tip-host' + (fresh ? ' fresh' : ''), tabindex: 0, 'data-term': id }, [content, tip(title, text)]);
 
   // ---------------------------------------------------------------- the pieces of the formula (markup) for a vertex
-  const piece = v => {
-    const a = v.A.index, b = v.B.index, c = v.C.index, F = v.frame_markup, lamA = v.root ? 'λ_{0}' : `${letter}_{${a}}`;
-    const Aname = v.root ? named('0', false) : itl(v.display), B = named(v.B.leaf ? v.B.name : v.B.display, !v.B.leaf), C = named(v.C.leaf ? v.C.name : v.C.display, !v.C.leaf);
-    return {
-      a, b, c, F, Aname, B, C,
-      D: `D^{j_{${a}}*}_{${lamA},${letter}_{${b}}${MINUS}${letter}_{${c}}}|^{[${F}]}(${v.phi_zero ? '0' : `φ_{${b}}`},ϑ_{${b}},0)`,
-      phase: `(${MINUS}1)^{j_{${c}}${MINUS}${letter}_{${c}}^{[${F}]}}`,
-      h: `h^{[${F}]}_{${letter}_{${b}}${letter}_{${c}}}(${vtc(v.display)})`,
-      lamA
-    };
-  };
+  const piece = v => vertexPiece(amp, v);
   const pieces = new Map(vertices.map(v => [v.key, piece(v)]));
 
   const vertexTerms = (v, fresh) => {
@@ -63,11 +52,11 @@ export function buildAmplitude({ payload, figs, cum, trans }) {
     ];
   };
   const lineTerms = (v, fresh) => {
-    const p = pieces.get(v.key), r = p.a, id = k => `${k}:${v.key}`, R = `$${itl(v.display)}$`;
+    const p = pieces.get(v.key), r = p.a, id = k => `${k}:${v.key}`, R = `$${itl(v.display)}$`, line = linePiece(amp, v);
     return [
-      term(id('sum'), sym(`Σ_{${letter}_{${r}}}`), 'Sum over the helicity',
+      term(id('sum'), sym(line.sum), 'Sum over the helicity',
         `Sum over the helicity of the intermediate state ${R}. The same numerical value leaves its production vertex and enters its decay vertex, so every value contributes coherently.`, fresh.has(id('sum'))),
-      term(id('G'), sym(`G_{${r}}(s_{${r}})`), 'Lineshape',
+      term(id('G'), sym(line.G), 'Lineshape',
         `Lineshape (propagator) of the intermediate state ${R}: the dependence on the invariant mass $s_{${r}}$ of its decay products, for example $G(s) = 1/(m_R^2 ${MINUS} s ${MINUS} i m_R Γ_R(s))$ for a resonance with the mass $m_R$ and the width $Γ_R$. Model data. It appears when the animation moves along the line of ${R} in the sketch.`, fresh.has(id('G')))
     ];
   };
@@ -93,14 +82,12 @@ export function buildAmplitude({ payload, figs, cum, trans }) {
     // frame labels of the helicities of the final states and of the momenta
     const production = new Map();                                       // final state -> vertex that produces it
     for (const v of vertices) for (const side of [v.B, v.C]) if (side.leaf) production.set(side.name, v);
-    const tag = f => `[${f}]`;
+    const tag = frameTag;
     const lam = l => { const v = production.get(l.name); return frames.has(v?.key) ? tag(v.frame_markup) : '[·]'; };
     const momentumFrame = l => { let label = null; for (const v of onChain) if (frames.has(v.key) && (v.A.members.includes(l.name) || (l.name === '0' && v.root))) label = v.frame_markup; return label ? tag(label) : '[lab]'; };
     const leaves = amp.leaves, mother = { name: '0', index: '0' };
     const root0 = rootReached ? tag(vertices.find(v => v.root).frame_markup) : '[·]';
-    const lower = leaves.map(l => `${letter}_{${l.index}}^{${lam(l)}}`).join('\u2009');
-    const momenta = [mother, ...leaves].map(l => `~p_{${l.index}}^{${momentumFrame(l)}}`);
-    const head = `ℳ^{(${up(K)})}^{λ_{0}^{${root0}}}_{${lower}}(${momenta[0]}; ${momenta.slice(1).join(', ')})`;           // the label of the chain stands before all helicities
+    const head = headMarkup(amp, { root0, lam, momentumFrame });
     const finals = leaves.map(l => named(l.index, false));
     const headTip = tip('The amplitude', `Helicity amplitude of the decay chain of the topology $${up(K)}$: the transition from the mother $${named('0', false)}$ with the helicity $λ_{0}$ to the final states $${finals.join(', ')}$ with the helicities $${letter}_{i}$. The helicity of every particle is measured in the frame given in brackets; $[·]$ is not known yet and is filled in when the animation reaches the frame in which that helicity is measured. The argument lists the momenta and the frame in which they are shown. The amplitude is built up step by step while the animation runs.`);
 
