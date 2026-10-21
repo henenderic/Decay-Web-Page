@@ -1,6 +1,6 @@
 // Page "Amplitude construction": from the experiment to the decay, the process as a diagram, the filling of the blobs (the T matrix), the amplitude of a single decay and the
 // amplitude of a decay chain. The text is written in English; the formulas come from the chain of the event (the final states and the names of the chain) where they depend on it.
-// The sections that are prerequisites, and the derivations, are foldouts. The Euler rotations stand at the beginning of the section on the single decay.
+// The sections that are prerequisites, and the derivations, are foldouts. The Euler rotations stand inside the derivation of the single decay, where the D functions come in.
 import { h, sym, mtex, named, itl, tagNode, texNode, state, up } from '../../app/common.js';
 import { buildEulerPage } from '../euler/euler.js';
 import { buildSketch } from '../../render/sketch.js';
@@ -132,7 +132,8 @@ export function buildAmplitudePage(payload) {
       &+\text{interactions that involve exchange particles}\end{aligned}`;
     const simplest = raw`\begin{aligned}T_{123}={}&\underbrace{V^{\text{contact}}_{\vtc{(123)}}}_{\text{the simplest possible decay into 3 particles}}\\
       &+\sum_\alpha\underbrace{\Big(V^{\alpha,\text{contact}}_{\vtc{(12)}}\otimes\one_{\prt{3}}\Big)\Big(G^{\alpha}_{\itl{(12)}}\otimes\one_{\prt{3}}\Big)V^{\alpha,\text{contact}}_{\vtc{((12)3)}}}_{\text{the simplest possible decays via a resonance of $\prt{1}$ and $\prt{2}$}}\\
-      &+\sum_\beta\big(\dots\big)_{(13)2}+\sum_\gamma\big(\dots\big)_{(23)1}\\
+      &+\sum_\beta\underbrace{\Big(V^{\beta,\text{contact}}_{\vtc{(13)}}\otimes\one_{\prt{2}}\Big)\Big(G^{\beta}_{\itl{(13)}}\otimes\one_{\prt{2}}\Big)V^{\beta,\text{contact}}_{\vtc{((13)2)}}}_{\text{the simplest possible decays via a resonance of $\prt{1}$ and $\prt{3}$}}\\
+      &+\sum_\gamma\underbrace{\Big(V^{\gamma,\text{contact}}_{\vtc{(23)}}\otimes\one_{\prt{1}}\Big)\Big(G^{\gamma}_{\itl{(23)}}\otimes\one_{\prt{1}}\Big)V^{\gamma,\text{contact}}_{\vtc{((23)1)}}}_{\text{the simplest possible decays via a resonance of $\prt{2}$ and $\prt{3}$}}\\
       &+\text{more complicated decays including rescattering}\end{aligned}`;
     const vRow = h('div', { class: 'v-row' }, [texNode(raw`V=`), svgNode(buildPotentialDiagram('direct')), texNode(raw`+\sum_\alpha`), svgNode(buildPotentialDiagram('production')),
                                                  texNode(raw`+\sum_\alpha`), svgNode(buildPotentialDiagram('decay')), texNode(raw`+\ \cdots`)]);
@@ -158,6 +159,7 @@ export function buildAmplitudePage(payload) {
       P(...mtex(`In many cases these decay chains are the dominant contributions to the decay amplitude. To model an amplitude one therefore often uses only the non-resonant contribution and the so-called cascade decays (the isobar model); rescattering of the final states is left out or treated separately.`)),
       P(...mtex(`In a cascade decay a mother particle decays into two daughters, which can decay further themselves or are “stable”.`), h('sup', { text: '1' }), ...mtex(` Only one- and two-particle states are therefore relevant in the mathematical description:`)),
       D(raw`\lvert\vec p_m;\lambda_m\rangle\frame{\text{lab}}\qquad\lvert\vec p_a,\vec p_b;\lambda_a\lambda_b\rangle\frame{\text{lab}}`),
+      P(...mtex(`Here $m$ is the mother of a decay, $a$ its first product, the reference particle, and $b$ its second product, the spectator. The derivation of a single decay below uses the names of the particles of the selected decay instead of $m$, $a$ and $b$.`)),
       small(h('sup', { text: '1' }), ' Of course decays into more than two particles are possible in a cascade decay as well, but this description is the simplest one mathematically.'),
       buildNormalisation(foldout),
       small('Literature: ', ext(DOI('10.1103/PhysRevD.101.034033'), 'M. Mikhasenko et al., Phys. Rev. D 101, 034033 (2020)'), '; ', ext(DOI('10.1007/JHEP08(2019)080'), 'M. Mikhasenko et al., JHEP 08, 080 (2019)'), '; ', ext(DOI('10.1103/PhysRevD.84.114019'), 'H. Kamano, S. X. Nakamura, T.-S. H. Lee and T. Sato, Phys. Rev. D 84, 114019 (2011)'),
@@ -181,13 +183,12 @@ export function buildAmplitudePage(payload) {
       readout.replaceChildren(h('div', { class: 'amp-readout-title' }, ['Selected decay']), sym(`${m} → ${label(v.B)} + ${label(v.C)}`, true),
                               h('div', { class: 'amp-readout-frame' }, ['rest frame of ', sym(m), ': ', tagNode(v.frame_markup)]));
     };
-    const derivation = buildDerivation(payload, { link, openEuler: () => state.showEuler(), openNormalisation: openFoldout('normalisation-details') });
+    const derivation = buildDerivation(payload, { link, euler: prerequisite, openNormalisation: openFoldout('normalisation-details') });
     const select = entry => { show(entry); const v = byNode.get(entry.name); if (v) derivation.show(v); };
     const diagram = buildSketch(topology, { width: 540, labelPx: 13, circles: { onSelect: select } });
     diagram.select(diagram.layout.root.name);
     blocks.push(heading3('A single Decay Vertex'),
-      P(...mtex(`A decay chain consists of single decays of one particle into two. The amplitude of a single decay $m\\to a+b$ is derived here in general, and every decay of the chain is described in this way. For the chain of this event the diagram below marks each decay by a circle, in a red that gets darker with the depth in the chain, and the derivation is applied to the selected decay: the frames of the states, the Lorentz transformation between them and the names of the particles come from the selected vertex. A click on a circle selects the decay. The derivation ends with the phase of the spectator. The Euler rotations are a prerequisite of this section.`)),
-      prerequisite,
+      P(...mtex(`A decay chain consists of single decays of one particle into two, and every one of them is described in the same way. The diagram below marks each decay of the chain of this event by a circle, in a red that gets darker with the depth in the chain. A click on a circle selects the decay to which the derivation below is applied: the mother $m$, the reference particle $a$ and the spectator $b$ of the states above are replaced by the particles of the selected decay, and the frames of the states and the Lorentz transformation between them come from the selected vertex. The derivation ends with the phase of the spectator.`)),
       h('div', { class: 'amp-figure' }, diagram.svg), readout, derivation.root, ...buildSpectatorPhase());
   }
 

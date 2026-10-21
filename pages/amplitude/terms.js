@@ -4,6 +4,7 @@
 //   vertex A -> B + C in the frame [v|K]:  sqrt((2 j_A+1)/(4 pi))  D^{j_A *}_{lambda_A, lambda_B - lambda_C}|^{[v|K]}(phi_B, theta_B, 0)  (-1)^{j_C - lambda_C}  h^{[v|K]}_{lambda_B lambda_C}(vertex)
 //   intermediate state R:                   sum over lambda_R, lineshape G_R(s_R)
 import { itl, vtc, named, up } from '../../app/common.js';
+import { toTex } from '../../render/tex.js';
 
 export const MINUS = '−';
 export const tag = frame => `[${frame}]`;
@@ -48,4 +49,11 @@ export function completeLabels(amp) {
     lam: l => tag(production.get(l.name).frame_markup),
     momentumFrame: l => { let label = null; for (const v of vertices) if (v.A.members.includes(l.name) || (l.name === '0' && v.root)) label = v.frame_markup; return tag(label); }
   };
+}
+
+/** The matrix element of the vertex v in TeX, with the phase-space factor of the two products (ρ with the indices of the two products), written out in full; the page uses it in the derivation
+ *  of a single decay and in the chain, so both give the same formula. */
+export function vertexAmplitudeTex(amp, v) {
+  const p = vertexPiece(amp, v), T = markup => toTex(markup, 0, true), F = markup => toTex(markup, 0, false);
+  return String.raw`\mathcal M_{\vtc{${v.display}}}=\sqrt{\frac{2\pi}{\rho_{${T(p.b)},${T(p.c)}}}}\;\sqrt{\frac{${T(`2j_{${p.a}}+1`)}}{4\pi}}\;${F(p.D)}\;${F(p.phase)}\;${F(p.h)}\,.`;
 }

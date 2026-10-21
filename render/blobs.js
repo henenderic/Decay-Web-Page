@@ -36,10 +36,15 @@ export function diagram(width, height, label) {
     el('rect', { x: f(c.x-w/2), y: f(c.y-h/2), width: w, height: h, rx: 4, fill: '#fff', 'fill-opacity': .92 }, svg);
     el('text', { x: f(c.x), y: f(c.y+5), 'text-anchor': 'middle', 'font-family': FONT, 'font-size': 15, fill: TEXT }, svg, 'Blob');
   };
-  // a name with the upright subscript p, as in the sketches: 1_p
-  const name = (x, y, base, sub, anchor = 'middle') => {
+  // a name with the upright subscript p, as in the sketches: 1_p; an optional superscript (the index of a resonance) and an optional white box behind the text
+  const name = (x, y, base, sub, anchor = 'middle', sup = '', box = false) => {
+    if (box) {
+      const w = base.length*10.5+(sub ? 9 : 0)+(sup ? 9 : 0)+6, x0 = anchor === 'start' ? x-3 : anchor === 'end' ? x-w+3 : x-w/2;
+      el('rect', { x: f(x0), y: f(y-17), width: f(w), height: 25, rx: 4, fill: '#fff', 'fill-opacity': .94 }, svg);
+    }
     const t = el('text', { x: f(x), y: f(y), 'text-anchor': anchor, 'font-family': FONT, 'font-size': 18, fill: TEXT }, svg);
     el('tspan', {}, t, base); if (sub) el('tspan', { dy: 5, 'font-size': 13 }, t, sub);
+    if (sup) el('tspan', { dy: sub ? -12 : -7, dx: sub ? -7 : 1, 'font-size': 13, 'font-style': 'italic' }, t, sup);
   };
   const word = (x, y, text, anchor = 'middle') => el('text', { x: f(x), y: f(y), 'text-anchor': anchor, 'font-family': FONT, 'font-size': 16, 'font-style': 'italic', fill: TEXT }, svg, text);
   return { svg, line, double, blob, name, word, el };
@@ -89,26 +94,27 @@ export function buildDecayBlob(n) {
 export function buildPotentialDiagram(kind) {
   const labels = { direct: 'Diagram of the direct decay of the mother into three particles', production: 'Diagram of the decay of the mother into the intermediate state of the particles 1 and 2 and the particle 3',
                    decay: 'Diagram of the decay of the intermediate state into the particles 1 and 2, while the particle 3 passes by' };
-  const d = diagram(240, 150, labels[kind]);
-  const c = { x: 100, y: 75 }, r = 24, xs = 196;
+  const d = diagram(270, 150, labels[kind]);
+  const c = { x: 120, y: 75 }, r = 24, x0 = 64, xs = 198;                                      // the incoming lines start at x0, the name stands to the left of the arrow
+  const incoming = (y, base, sub, sup) => d.name(x0-8, y+5, base, sub, 'end', sup);
   if (kind === 'direct') {
-    const start = { x: 14, y: c.y };
-    d.line(start, onCircle(start, c, r)); d.name(52, c.y-10, '0', 'p');
+    const start = { x: x0, y: c.y };
+    d.line(start, onCircle(start, c, r)); incoming(c.y, '0', 'p');
     [['1', 30], ['2', 75], ['3', 120]].forEach(([nm, y]) => { const end = { x: xs, y }; d.line(onCircle(end, c, r), end); d.name(end.x+8, end.y+5, nm, 'p', 'start'); });
     d.blob(c, r, false);
   } else if (kind === 'production') {
-    const start = { x: 14, y: c.y }, up = { x: xs, y: 34 }, down = { x: xs, y: 116 };
-    d.line(start, onCircle(start, c, r)); d.name(52, c.y-10, '0', 'p');
-    d.double(onCircle(up, c, r), up); d.name(up.x+8, up.y+5, '(12)', 'i', 'start');
+    const start = { x: x0, y: c.y }, up = { x: xs, y: 34 }, down = { x: xs, y: 116 };
+    d.line(start, onCircle(start, c, r)); incoming(c.y, '0', 'p');
+    d.double(onCircle(up, c, r), up); d.name(up.x+8, up.y+5, '(12)', 'i', 'start', 'α');
     d.line(onCircle(down, c, r), down); d.name(down.x+8, down.y+5, '3', 'p', 'start');
     d.blob(c, r, false);
   } else {
-    const top = { x: 100, y: 42 }, start = { x: 14, y: top.y };
-    d.double(start, onCircle(start, top, r)); d.name(40, top.y-12, '(12)', 'i', 'start');
+    const top = { x: 120, y: 42 }, start = { x: x0, y: top.y };
+    d.double(start, onCircle(start, top, r)); incoming(top.y, '(12)', 'i', 'α');
     [['1', 14], ['2', 70]].forEach(([nm, y]) => { const end = { x: xs, y }; d.line(onCircle(end, top, r), end); d.name(end.x+8, end.y+5, nm, 'p', 'start'); });
     d.blob(top, r, false);
-    const a = { x: 14, y: 122 }, b = { x: xs, y: 122 };
-    d.line(a, b); d.name(b.x+8, b.y+5, '3', 'p', 'start');
+    const a = { x: x0, y: 122 }, b = { x: xs, y: 122 };
+    d.line(a, b); incoming(a.y, '3', 'p'); d.name(b.x+8, b.y+5, '3', 'p', 'start');
   }
   return d.svg;
 }

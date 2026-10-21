@@ -3,7 +3,7 @@
 // the module that the amplitude row of the dynamic view uses as well.
 import { h, mtex, texNode } from '../../app/common.js';
 import { toTex } from '../../render/tex.js';
-import { vertexPiece, linePiece, headMarkup, completeLabels } from './terms.js';
+import { vertexPiece, vertexAmplitudeTex, linePiece, headMarkup, completeLabels } from './terms.js';
 
 const T = markup => toTex(markup, 0, true);
 const F = markup => toTex(markup, 0, false);                                                    // the markup of a term of the amplitude row (see terms.js)
@@ -47,11 +47,8 @@ export function buildChain(payload, { link, projection }) {
     ? raw`\begin{aligned}T^{\text{${K}}}={}&${pieces.map((piece, k) => (k ? raw`&\quad` : '') + piece).join(raw`\\ `)}\,.\end{aligned}`
     : raw`T^{\text{${K}}}=${pieces.join('\\,')}\,.`;
 
-  // ---------------------------------------------------------------- the amplitude of a single decay, the matrix element of its vertex
-  const vertexAmplitude = v => {
-    const p = vertexPiece(amp, v);
-    return raw`\mathcal M_{${texVertex(v)}}=\sqrt{\frac{2\pi}{\rho_{${T(p.a)}}}}\;\sqrt{\frac{${T(`2j_{${p.a}}+1`)}}{4\pi}}\;${F(p.D)}\;${F(p.phase)}\;${F(p.h)}\,.`;
-  };
+  // ---------------------------------------------------------------- the amplitude of a single decay, the matrix element of its vertex (the same formula as in the derivation)
+  const vertexAmplitude = v => vertexAmplitudeTex(amp, v);
 
   // ---------------------------------------------------------------- the complete set that stands at the first decay
   const fRoot = frameSup(rootV.frame_markup);
