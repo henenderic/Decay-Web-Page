@@ -24,8 +24,18 @@ http://127.0.0.1:8000/?event={"mother":[9.424309,3.046443,2.084185,2.929122],"fi
 
 ## Publish on GitHub Pages
 
-1. Put the contents of this folder in the root of a GitHub repository (branch `main`).
-2. In the repository settings, open *Pages* and choose the source *GitHub Actions*. The workflow `.github/workflows/pages.yml` then publishes the page after every push to `main`. (Alternatively choose *Deploy from a branch*, branch `main`, folder `/ (root)`; the workflow is then not needed.)
+The page is published by the workflow `.github/workflows/pages.yml` from the branches of the repository that hold a version of it:
+
+| Branch | Version | Address |
+|---|---|---|
+| `web` | the complete page | `https://<account>.github.io/<repository>/` |
+| `no-greenwich` | the page without the Greenwich angle | `https://<account>.github.io/<repository>/no-greenwich/` |
+
+A repository has one Pages site, so the workflow assembles both branches into one site after every push to one of them; a branch that does not exist (yet) is left out. The workflow file is the same in both branches.
+
+1. Push the page to the branch `web` (and, for the second version, to `no-greenwich`).
+2. In the repository settings, open *Pages* and choose the source *GitHub Actions*.
+3. After a push the workflow runs (tab *Actions*); it can also be started by hand (*Run workflow*).
 
 ## Files
 
