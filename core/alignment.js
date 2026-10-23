@@ -1,10 +1,10 @@
-// Helicity alignment between two topologies and Greenwich geometry (port of alignment.py).
+// Helicity alignment between two topologies (port of alignment.py).
 //
 // A path of a final-state particle is the product of all transport operations from the laboratory frame to its terminal rest-spin frame i|K.
 // W_i^{K->I} = T_i^I (T_i^K)^{-1} fixes the rest momentum and is a rotation for a massive particle; it is also built from the chains of single steps
 // L_{parent<-daughter} = R_z(phi) R_y(theta) [R_y(pi)] B_z(eta) and compared with the construction from the transport matrices.
-import { eye, matmul, matvec, transpose, maxAbs, sub, norm, dot, det, sumVectors, cmul, cexp, ceye, cmatmul, cinv2 } from './linalg.js';
-import { G, InputError, Operation, MATRIX, rotationY, rotationZ, boostZ, computeFrames, invariant, leaves, treeName, sameTree } from './kinematics.js';
+import { eye, matmul, matvec, transpose, maxAbs, sub, norm, dot, det, cmul, cexp, ceye, cmatmul, cinv2 } from './linalg.js';
+import { G, InputError, Operation, MATRIX, rotationY, rotationZ, computeFrames, invariant, leaves, treeName, sameTree } from './kinematics.js';
 
 export const POLE = 1e-9;            // |sin(beta)| below this value is treated as an Euler pole
 export const TOLERANCE = 2e-7;       // residuals of the numerical checks, as for the frames
@@ -160,35 +160,3 @@ export function computeAlignment(frames, degenerate = 'error') {
 }
 
 const sub2 = (A, B) => A.map((row, i) => row.map((x, j) => x - B[i][j]));
-
-// ------------------------------------------------------------------ Greenwich geometry
-/** Data for the top view of the Greenwich choice in the rest frame of the mother. `describe(tree)` returns [label, color]. */
-export function greenwich(frames, describe = null) {
-  const ops = frames.decays[0].path[0].operations;
-  const [preMatrix] = product([ops[0], ops[1], ops[3]]);          // rotations and boost before the Greenwich rotation; the order in the list is Rz, Ry, Rz(chi), Bz
-  const chi = -ops[2].value + 0;
-  const lab = frames.lab.momenta;
-  const nodeMomentum = (tree, matrix) => matvec(matrix, sumVectors(leaves(tree).map(k => lab.get(k))));
-  const finalMatrix = frames.decays[0].matrix;
-  const firstRef = frames.reference[0], firstDecay = frames.decay[0];
-  const mother = frames.lab.momenta.get('0');
-  const items = [];
-  const add = (tree, role) => {
-    const pre = nodeMomentum(tree, preMatrix), fin = nodeMomentum(tree, finalMatrix);
-    const [label, color] = describe ? describe(tree) : [treeName(tree), '#394953'];
-    items.push({ node: treeName(tree), label, color, role, leaf: typeof tree === 'string',
-                 preliminary: pre.slice(1, 3), final: fin.slice(1, 3), pz: fin[3],
-                 transverse: Math.hypot(fin[1], fin[2]), energy: fin[0] });
-  };
-  add(firstRef, 'reference');
-  if (!sameTree(firstDecay, firstRef)) add(firstDecay, 'decay');
-  for (const leaf of leaves(frames.decay)) if (leaf !== treeName(firstRef) && leaf !== treeName(firstDecay)) add(leaf, 'final');
-  const refItem = items[0];
-  const defined = refItem.transverse > 1e-11 * Math.max(refItem.energy, 1e-300);
-  const q0 = norm(mother.slice(1));
-  return {
-    chi, defined: Boolean(defined), reference_topology: treeName(frames.reference), reference_label: frames.referenceLabel, decay_label: frames.decayLabel,
-    same_topology: sameTree(frames.reference, frames.decay), reference_first: treeName(firstRef), decay_first: treeName(firstDecay),
-    mother_flight: { momentum: q0, phi: q0 > 0 ? Math.atan2(mother[2], mother[1]) : 0, theta: Math.atan2(Math.hypot(mother[1], mother[2]), mother[3]) },
-    vectors: items };
-}

@@ -32,7 +32,7 @@ export function buildNextStepPage(payload) {
   const stepSketch = (edge, topology) => {                                                // tiny stylised sketch: the vertex of the parent, the line to the daughter and, for an intermediate state, its vertex
     if (!topology) return '';
     const sk = buildSketch(topology, { width: 132, labels: 'names', stylised: true });
-    sk.update(stepSelection(sk.layout, headOf(edge.parent).startsWith('R0^') ? sk.layout.root.name : headOf(edge.parent), headOf(edge.child)));
+    sk.update(stepSelection(sk.layout, headOf(edge.parent) === 'R0' ? sk.layout.root.name : headOf(edge.parent), headOf(edge.child)));
     sk.svg.setAttribute('aria-label', `The step ${plain(edge.label)} in the sketch of the topology`);
     return sk.svg;
   };
@@ -139,7 +139,7 @@ export function buildNextStepPage(payload) {
   // ---------------------------------------------------------------- the two topologies and their amplitudes, with the helicity labels in their own frames
   const sketchCard = (title, labelNode, topology) => h('figure', { class: 'sketch-card' }, [h('figcaption', {}, [title, ' ', labelNode]), buildSketch(topology, { width: 360 }).svg]);
   const sketches = payload.topologies ? h('div', { class: 'sketch-pair' }, [sketchCard('Reference topology', Is(), payload.topologies.reference), sketchCard('Decay topology', Ks(), payload.topologies.decay)]) : null;
-  const rootFrame = T => `R_0^{${up(I)}}|${up(T)}`;                                      // the root frame carries the orientation of the reference topology
+  const rootFrame = T => `R_0|${up(T)}`;                                                  // the root frame is common to every topology
     const amplitude = reference => {                                                         // the amplitude of a topology with the frames in which its helicities are measured
     const T = reference ? I : K, letter = reference ? 'λ' : 'ν';
     const labels = entries.map(e => `${letter}_{${e.index_markup}}^{[${reference ? e.target_markup : e.source_markup}]}`).join('\u2009');

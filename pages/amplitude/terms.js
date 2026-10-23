@@ -16,7 +16,7 @@ export function vertexPiece(amp, v) {
   const Aname = v.root ? named('0', false) : itl(v.display), B = named(v.B.leaf ? v.B.name : v.B.display, !v.B.leaf), C = named(v.C.leaf ? v.C.name : v.C.display, !v.C.leaf);
   return {
     a, b, c, F, Aname, B, C,
-    D: `D^{j_{${a}}*}_{${lamA},${letter}_{${b}}${MINUS}${letter}_{${c}}}|^{[${F}]}(${v.phi_zero ? '0' : `φ_{${b}}`},ϑ_{${b}},0)`,
+    D: `D^{j_{${a}}*}_{${lamA},${letter}_{${b}}${MINUS}${letter}_{${c}}}|^{[${F}]}(φ_{${b}},ϑ_{${b}},0)`,
     phase: `(${MINUS}1)^{j_{${c}}${MINUS}${letter}_{${c}}^{[${F}]}}`,
     h: `h^{[${F}]}_{${letter}_{${b}}${letter}_{${c}}}(${vtc(v.display)})`,
     lamA

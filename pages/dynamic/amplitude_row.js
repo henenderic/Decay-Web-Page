@@ -43,8 +43,7 @@ export function buildAmplitude({ payload, figs, cum, trans }) {
       term(id('norm'), texNode(`\\sqrt{\\frac{${toTex(`2j_{${p.a}}+1`, 0, true)}}{4\\pi}}`), 'Angular normalisation',
         `Normalisation of the angular part for the decay ${decay}. It comes from the expansion of the state of the decaying system with the spin $j_{${p.a}}$ in partial waves. It is fixed by the formalism and no fitted strength.`, fresh.has(id('norm'))),
       term(id('D'), sym(p.D), 'Wigner D function',
-        `Complex conjugated Wigner $D$ function for the spin $j_{${p.a}}$ of the decaying system. It turns the spin state, quantised along the $z$ axis of the frame [${v.frame_label}], into the direction of the reference daughter $${p.B}$: $φ_{${p.b}}$ and $ϑ_{${p.b}}$ are its azimuth and polar angle in this frame, the angles of the transformation steps into this frame (with the opposite sign). The third Euler angle is zero by convention. The indices are numerical helicity projections: the decaying system has $${p.lamA}$, the pair of daughters the difference of their helicities.`
-        + (v.phi_zero ? ' The azimuth is zero here: the reference topology fixes the root axes (Greenwich convention).' : ''), fresh.has(id('D'))),
+        `Complex conjugated Wigner $D$ function for the spin $j_{${p.a}}$ of the decaying system. It turns the spin state, quantised along the $z$ axis of the frame [${v.frame_label}], into the direction of the reference daughter $${p.B}$: $φ_{${p.b}}$ and $ϑ_{${p.b}}$ are its azimuth and polar angle in this frame, the angles of the transformation steps into this frame (with the opposite sign). The third Euler angle is zero by convention. The indices are numerical helicity projections: the decaying system has $${p.lamA}$, the pair of daughters the difference of their helicities.`, fresh.has(id('D'))),
       term(id('phase'), sym(p.phase), 'Phase of the spectator',
         `The phase $(${MINUS}1)^{j_{${p.c}}${MINUS}${letter}_{${p.c}}}$ belongs to the second daughter $${p.C}$. It follows from the half-turn $R_y(π)$ in its transport: the spectator moves opposite to the reference daughter. It must be included once.`, fresh.has(id('phase'))),
       term(id('h'), sym(p.h), 'Reduced coupling',
@@ -104,7 +103,7 @@ export function buildAmplitude({ payload, figs, cum, trans }) {
       const rootFrame = vertices.find(v => v.root).frame_markup;
       row('∝', [h('span', { class: 'term tip-host note', tabindex: 0 }, [
         h('span', { class: 'note-text' }, ['first transform ', tagNode('lab'), ' → ', tagNode(rootFrame)]), ops.length ? [': ', sym(ops.join(' '))] : null,
-        tip('Transformation into the rest frame of the mother', `The helicity of the mother $${named('0', false)}$ is defined in its rest frame with the common root axes. The event is therefore first transformed from the laboratory frame into $[R_0^{${up(I)}}|${up(K)}]$. These are the steps of the animation; the product is read from right to left, the step that was applied last stands on the left. The terms of the amplitude appear afterwards.`)])]);
+        tip('Transformation into the rest frame of the mother', `The helicity of the mother $${named('0', false)}$ is defined in its rest frame with the common root axes. The event is therefore first transformed from the laboratory frame into $[R_0|${up(K)}]$. These are the steps of the animation; the product is read from right to left, the step that was applied last stands on the left. The terms of the amplitude appear afterwards.`)])]);
     } else {
       // one line for every step of the animation, in the order in which the terms appear
       let first = true;

@@ -47,7 +47,6 @@ h1{font:600 17px/1.3 Georgia,"Times New Roman",serif;letter-spacing:0}
 .decay-line{font-family:"STIX Two Text","Latin Modern Roman",Cambria,"Times New Roman","Liberation Serif",Georgia,serif;font-size:12.5px;color:var(--muted);margin-top:2px}
 .frame-tag{font-family:"STIX Two Text","Latin Modern Roman",Cambria,"Times New Roman","Liberation Serif",Georgia,serif;color:var(--accent);font-size:17px;line-height:1.3;white-space:nowrap;margin:3px 0 2px}.frame-tag sub,.frame-tag sup{font-size:.62em}
 
-
 .toolbar-buttons{display:flex;gap:4px;flex-wrap:wrap}.toolbar-buttons button{font-size:11px;padding:4px 8px;min-width:28px}
 .scene{display:block;width:100%;max-width:var(--fig-w);margin:0 auto;height:auto;aspect-ratio:12.6/10.3;touch-action:none;cursor:grab;user-select:none;background:#fff}.scene.dragging{cursor:grabbing}
 .card-body{display:grid;grid-template-columns:170px minmax(340px,var(--fig-w)) minmax(290px,420px);justify-content:start;gap:20px;padding:10px 20px 14px;align-items:start}
@@ -65,7 +64,6 @@ h1{font:600 17px/1.3 Georgia,"Times New Roman",serif;letter-spacing:0}
 .num-table{font-size:11px;width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin:6px 0 10px}
 .num-table th,.num-table td{text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}.num-table th:first-child,.num-table td:first-child{text-align:left}
 .num-table td.meaning,.num-table th.meaning{text-align:left;color:var(--muted)}
-
 
 .sym{font-size:1em}.sym .katex{font-size:1.12em}.sym.sym-display{display:block;text-align:center}.sym .katex-display{margin:0}
 [hidden]{display:none!important}
@@ -89,9 +87,6 @@ h1{font:600 17px/1.3 Georgia,"Times New Roman",serif;letter-spacing:0}
 .op-chips{display:flex;gap:8px;flex-wrap:wrap;padding:6px 20px 10px}
 .op-chip{border:1px solid var(--line);border-radius:6px;padding:3px 9px;font:12.5px "STIX Two Text","Latin Modern Roman",Cambria,"Times New Roman","Liberation Serif",Georgia,serif;color:var(--muted);background:#fff;transition:background .15s}
 .op-chip.active{background:var(--accent-light);border-color:#7fb0b4;color:#1c4f58}
-
-
-
 
 .stage-strip{padding:2px 0 4px}
 
@@ -158,21 +153,12 @@ h1{font:600 17px/1.3 Georgia,"Times New Roman",serif;letter-spacing:0}
 .hel-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:5px 0;padding:2px 6px;border-radius:6px}.hel-row.current{background:var(--accent-light)}
 .hel-row button{margin-left:auto;padding:2px 10px;font-size:11px}.hel-note{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:4px}
 
-/* pages: Greenwich convention and next step (helicity alignment) */
+/* pages: foldouts and next step (helicity alignment) */
 .euler-details{margin:4px 0 12px;border:1px solid var(--line);border-radius:8px;background:#fbfdfd}
 .euler-details>summary{cursor:pointer;padding:7px 12px;font-size:12px;color:var(--muted)}
 .euler-details>summary .prerequisite-label{color:#304d59;font-weight:600}
 .euler-details[open]>summary{border-bottom:1px solid var(--line)}.euler-details[open]>summary .prerequisite-hint{display:none}
 .euler-details>.euler-box{padding:4px 18px 16px;max-width:1100px}
-.greenwich-text{font-size:11.5px;line-height:1.55;max-width:900px}.greenwich-text p{margin:7px 0}
-
-.greenwich-svg{display:block;width:100%;max-width:calc(var(--fig-h) - 50px);height:auto;aspect-ratio:1;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:6px;cursor:grab;touch-action:none}
-.greenwich-svg.dragging{cursor:grabbing}
-.greenwich-figure .toolbar-buttons{margin-top:8px;justify-content:center}
-.greenwich-figure button[aria-pressed=true]{font-weight:600;border-color:#7fb0b4;background:#fff}
-.greenwich-caption{font-size:11px;color:var(--muted);line-height:1.45;margin:6px auto 0;max-width:calc(var(--fig-h) - 50px)}
-.greenwich-readout{font-size:11.5px;line-height:1.55;margin:10px 0}.greenwich-readout div{margin:2px 0}
-
 
 .align-table td,.align-table th{text-align:left;padding:3px 8px}.align-table tr.selected{background:var(--accent-light)}
 .align-chip{padding:2px 10px}.align-chip[aria-pressed=true]{font-weight:600;border-color:#7fb0b4;background:#fff}.align-chip:disabled{opacity:.45;cursor:not-allowed}

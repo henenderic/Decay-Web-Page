@@ -1,6 +1,6 @@
 # Cascade Decay Frames
 
-An interactive page for cascades of ordered binary decays. From the four-momenta of a decay `0 → 1 + 2 + …` and a decay topology, it computes the rest frames of all intermediate states and shows, as an animation, how the laboratory frame is carried step by step into the frame of every vertex. Further pages explain the notation of the frame labels, the construction of the amplitude of a decay chain (with the Euler rotations), the Greenwich convention for the axes of the root frame, and the step from one decay topology to a reference topology.
+An interactive page for cascades of ordered binary decays. From the four-momenta of a decay `0 → 1 + 2 + …` and a decay topology, it computes the rest frames of all intermediate states and shows, as an animation, how the laboratory frame is carried step by step into the frame of every vertex. Further pages explain the notation of the frame labels, the construction of the amplitude of a decay chain (with the Euler rotations), and the step from one decay topology to a reference topology. This version of the page (branch `no-greenwich`) has no Greenwich angle: the root axes follow from the laboratory axes and the flight direction of the mother alone.
 
 The page runs entirely in the browser: all calculations are done by JavaScript on your computer, nothing is sent anywhere, and the page loads no files from other sites. It is a static site and works on GitHub Pages.
 
@@ -32,10 +32,10 @@ http://127.0.0.1:8000/?event={"mother":[9.424309,3.046443,2.084185,2.929122],"fi
 | Folder or file | Content |
 |---|---|
 | `index.html`, `style.css` | the page |
-| `core/` | the computation: `kinematics.js` (frames from four-momenta), `alignment.js` (Greenwich axes, Euler angles, transports between two topologies), `scene.js` (momenta of a frame as geometry), `payload.js` (everything the page shows, including the samples of the animation), `linalg.js` (small matrices), `address.js` (start event from the address) |
+| `core/` | the computation: `kinematics.js` (frames from four-momenta), `alignment.js` (Euler angles, transports between two topologies), `scene.js` (momenta of a frame as geometry), `payload.js` (everything the page shows, including the samples of the animation), `linalg.js` (small matrices), `address.js` (start event from the address) |
 | `app/` | start and form (`app.js`, `decay_form.js`) and shared helpers (`common.js`: DOM, formulas through KaTeX, SVG and PNG export) |
-| `render/` | drawing: `drawing.js` (figures of the frames), `sketch.js` (Feynman sketches), `blobs.js` (simplified diagrams, also the terms of the potential), `vertex_figure.js` (primary and secondary vertex), `dalitz.js` (schematic Dalitz plot), `legend.js`, `tex.js` (markup to TeX), `world.js` (coarse land outlines for the globe, Natural Earth 110m, public domain), `experiments_figure.js` (sketch of the two kinds of experiment) |
-| `pages/` | one folder per page: `dynamic/` (animation and the amplitude row), `amplitude/` (construction of the amplitude: `page.js` the text, `derivation.js` the single decay and the phase of the spectator, `chain.js` the chain, `terms.js` the terms of the amplitude, shared with the amplitude row of `dynamic/`), `euler/`, `greenwich/`, `next-step/` |
+| `render/` | drawing: `drawing.js` (figures of the frames), `sketch.js` (Feynman sketches), `blobs.js` (simplified diagrams, also the terms of the potential), `vertex_figure.js` (primary and secondary vertex), `dalitz.js` (schematic Dalitz plot), `legend.js`, `tex.js` (markup to TeX), `experiments_figure.js` (sketch of the two kinds of experiment) |
+| `pages/` | one folder per page: `dynamic/` (animation and the amplitude row), `amplitude/` (construction of the amplitude: `page.js` the text, `derivation.js` the single decay and the phase of the spectator, `chain.js` the chain, `terms.js` the terms of the amplitude, shared with the amplitude row of `dynamic/`), `euler/`, `next-step/` |
 | `vendor/katex/` | KaTeX 0.16.47 (MIT licence), which sets the formulas |
 
 The conventions of the page are explained on its page *Notation*.

@@ -158,24 +158,15 @@ export function computeFrames(mother, finalStates, referenceTopology, decayTopol
     phi0 = 0; theta0 = 0;
   } else {
     const rho = Math.hypot(p0[1], p0[2]);
-    // The preliminary azimuth at a flight pole is a gauge; Greenwich fixes it below.
+    // On the z axis of the laboratory the azimuth of the flight direction is not defined; it is set to zero (a gauge, the root axes are then the laboratory axes).
     phi0 = rho > 1e-12 * q0 ? phiAngle(p0[2], p0[1]) : 0;
     theta0 = Math.atan2(rho, p0[3]);
   }
   const rootOps = [new Operation('Rz', -phi0, 'Align mother azimuth'),
                    new Operation('Ry', -theta0, 'Align mother flight with +z'),
                    new Operation('Bz', -Math.asinh(q0 / m0), 'Bring mother 0 to rest')];
-  const rootLabel = `R0^${referenceLabel}`;
+  const rootLabel = 'R0';
   const rootStep = new Transition('lab', rootLabel, 'root', rootOps);
-  const referenceSum = sumVectors(leaves(reference[0]).map(k => momenta.get(k)));
-  const r = matvec(rootStep.matrix, referenceSum);
-  let chi;
-  if (Math.hypot(r[1], r[2]) <= 1e-11 * Math.max(Math.abs(r[0]), m0)) {
-    fallback('Root reference has no transverse momentum: Greenwich x is undefined; retaining the preliminary x axis.', rootDegenerate);
-    chi = 0;
-  } else chi = phiAngle(r[2], r[1]);
-  // The Greenwich rotation commutes with the boost along z; it stands before the boost, so that the rotations are grouped.
-  rootOps.splice(2, 0, new Operation('Rz', -chi, 'Greenwich: reference transverse momentum along +x'));
   const rootMatrix = rootStep.matrix;
 
   const transformed = matrix => new Map([...momenta.entries()].map(([k, p]) => [k, matvec(matrix, p)]));

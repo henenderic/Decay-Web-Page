@@ -1,10 +1,9 @@
 // The payload of the page (port of interactive_data.py): every physical quantity comes from the core, this module adds names, texts and the sampled animation.
 import { matvec, norm, dot, maxAbs } from './linalg.js';
 import { InputError, computeFrames, leaves, parseTopology, treeName, rotationY, rotationZ, boostZ, MATRIX, sameTree } from './kinematics.js';
-import { computeAlignment, greenwich } from './alignment.js';
+import { computeAlignment } from './alignment.js';
 import { momentumScene, MAX_PLANE_PARTICLES } from './scene.js';
 
-const SUPERSCRIPT = Object.fromEntries([...'0123456789I'].map((c, i) => [c, '⁰¹²³⁴⁵⁶⁷⁸⁹ᴵ'[i]]));
 const MINUS = '−';
 const PARENT_COLOR = '#394953';
 const FINAL_STATE_COLORS = ['#B46765', '#5B8A74', '#296E96', '#8773A7', '#AB893C', '#558F99'];
@@ -21,9 +20,11 @@ export function displayTree(node) {
   const separator = leaves(node).every(k => isDigit(k) && k.length === 1) ? '' : ', ';
   return '(' + displayTree(node[0]) + separator + displayTree(node[1]) + ')';
 }
+/** The root frame, the rest frame of the mother in the common root axes, is labelled R0; every other frame is named by its vertex. */
+export const isRootLabel = label => label.split('|')[0] === 'R0';
 export function displayFrame(label) {
   const parts = label.split('|');
-  if (parts[0].startsWith('R0^')) parts[0] = 'R₀' + [...parts[0].slice(3)].map(c => SUPERSCRIPT[c] ?? c).join('');
+  if (parts[0] === 'R0') parts[0] = 'R₀';
   else if (parts[0] !== 'lab') parts[0] = displayTree(parseTopology(parts[0]));
   return parts.join('|');
 }
@@ -42,7 +43,7 @@ const ZERO = prt('0');
 export function frameMarkup(label) {
   const parts = label.split('|');
   let head;
-  if (parts[0].startsWith('R0^')) head = 'R_0^{' + escape(parts[0].slice(3)) + '}';
+  if (parts[0] === 'R0') head = 'R_0';
   else if (parts[0] === 'lab') head = 'lab';
   else head = escape(displayTree(parseTopology(parts[0])));
   return [head, ...parts.slice(1).map(p => '@{' + escape(p) + '}')].join('|');                  // the topology label is upright text
@@ -87,7 +88,7 @@ export function normalizeEvent(event) {
 
 // ------------------------------------------------------------------ transport description
 const ROOT_PARAMETERS = [
-  // texts use $...$ for mathematics; the viewer sets them as such. The rotations come first, the boost last (the Greenwich rotation commutes with it).
+  // texts use $...$ for mathematics; the viewer sets them as such. The rotations come first, the boost last.
   ['Rz', 'φ_0', `azimuth of the laboratory flight direction of $${ZERO}$`,
     `Change to axes turned by $φ_0$ about the $z$ axis, where $φ_0$ is the azimuth of the laboratory momentum of the mother $${ZERO}$. `
     + 'The coordinates transform with the inverse rotation $R_z(−φ_0)$; against the axes, all momenta of the event turn by $−φ_0$. '
@@ -95,13 +96,7 @@ const ROOT_PARAMETERS = [
   ['Ry', 'ϑ_0', `polar angle of the laboratory flight direction of $${ZERO}$`,
     `Change to axes tilted by $ϑ_0$ about the $y$ axis, where $ϑ_0$ is the polar angle of the momentum of $${ZERO}$. `
     + `The coordinates transform with $R_y(−ϑ_0)$; against the axes, all momenta turn by $−ϑ_0$. Afterwards the flight direction of $${ZERO}$ `
-    + 'coincides with the $+z$ axis, which becomes the $z$ axis of all root-based frames.'],
-  ['Rz', 'χ', 'Greenwich angle: azimuth of the first daughter of the reference topology',
-    'Change to axes turned by $χ$ about $z$, where $χ$ is the azimuth of the first daughter of the REFERENCE topology in the rest frame of '
-    + `$${ZERO}$ (a boost along $z$ does not change it, so it can be taken before the boost). The coordinates transform with $R_z(−χ)$. `
-    + 'This angle is the Greenwich choice, and it is made by the reference topology alone: afterwards that daughter lies in the $xz$ plane with a '
-    + 'positive $x$ component, which fixes the root axes once for all topologies. A decay topology that differs from the reference topology does not '
-    + 'choose its own $x$ axis; its first daughter then generally has a nonzero azimuth in these axes. The page “Greenwich convention” shows this step.'],
+    + 'coincides with the $+z$ axis, which becomes the $z$ axis of all root-based frames; the $x$ axis lies in the plane of this direction and the laboratory $z$ axis, the $y$ axis is perpendicular to it.'],
   ['Bz', 'η_0', `rapidity of $${ZERO}$ along the inherited $z$ axis`,
     `Change to the frame that moves along $z$ with the rapidity $η_0$ of the mother $${ZERO}$. The coordinates transform with the boost of rapidity $−η_0$. After this step $${ZERO}$ is at rest. `
     + 'The $z$ components and energies of all momenta change, the transverse components ($x$, $y$) are unchanged.'],
@@ -125,7 +120,7 @@ function describeStep(step, byLabel) {
   const parent = byLabel.get(step.source), child = byLabel.get(step.target);
   const [ref, spec] = parent.node;
   const B = named(ref), C = named(spec);
-  const A = step.source.startsWith('R0^') ? ZERO : itl(displayTree(parent.node));        // the decaying system: the mother 0 at the root, otherwise an intermediate state
+  const A = isRootLabel(step.source) ? ZERO : itl(displayTree(parent.node));        // the decaying system: the mother 0 at the root, otherwise an intermediate state
   const target = named(child.node);
   const names = [['φ', ref, `azimuth of the reference daughter $${B}$ in the parent frame`], ['ϑ', ref, `polar angle of the reference daughter $${B}$ in the parent frame`]];
   let next = 0;
@@ -168,15 +163,9 @@ function topologyJson(tree) {
   return { name: treeName(tree), display: displayTree(tree), leaf: false, children: [topologyJson(tree[0]), topologyJson(tree[1])] };
 }
 
-/** The Greenwich choice made by the reference topology, as one sentence. */
-function greenwichRule(frames) {
-  const first = displayTree(frames.reference[0]);
-  return `Greenwich convention, fixed by the reference topology ${frames.referenceLabel}: z along the laboratory flight direction of 0, `
-    + `x along the transverse momentum of the first daughter ${first} of topology ${frames.referenceLabel}, y completing a right-handed system. `
-    + 'All topologies use these root axes.';
-}
-
-const superscriptLabel = label => [...label].map(c => SUPERSCRIPT[c] ?? c).join('');
+/** The root axes, as one sentence. */
+const ROOT_RULE = 'Root axes: z along the laboratory flight direction of 0, x in the plane of this direction and the laboratory z axis (towards larger polar angle), '
+  + 'y completing a right-handed system. All topologies use these root axes.';
 
 /** English title, decay line and note for a figure (plain), and the title and the decay line with the names of the manuscript (markup). */
 function figureTexts(frame, frames, root, parentNode) {
@@ -188,12 +177,12 @@ function figureTexts(frame, frames, root, parentNode) {
   }
   if (frame === frames.referenceFirst) {
     return ['Rest frame of 0 (reference topology)', '0 → ' + displayTree(frames.reference[0]) + ' + ' + displayTree(frames.reference[1]),
-            `First decay of topology ${refLabel}. ` + greenwichRule(frames),
+            `First decay of topology ${refLabel}. ` + ROOT_RULE,
             `Rest frame of $${ZERO}$ (reference topology)`, decayMarkup(ZERO, frames.reference[0], frames.reference[1])];
   }
   if (frame.kind === 'all') {
     return ['Rest frame of 0 (all final states)', '0 → ' + leaves(frames.decay).map(displayTree).join(' + '),
-            `All final-state momenta in the root axes R₀${superscriptLabel(refLabel)}, which are common to every topology. ` + greenwichRule(frames),
+            'All final-state momenta in the root axes R₀, which are common to every topology. ' + ROOT_RULE,
             `Rest frame of $${ZERO}$ (all final states)`, `${ZERO} → ` + leaves(frames.decay).map(prt).join(' + ')];
   }
   const [first, second] = frame.node;
@@ -201,12 +190,7 @@ function figureTexts(frame, frames, root, parentNode) {
   const decaying = root ? ZERO : itl(displayTree(frame.node));
   const decayM = decayMarkup(decaying, first, second);
   if (root) {
-    let note = `First decay of topology ${decLabel} in the common root axes R₀${superscriptLabel(refLabel)}.`;
-    if (sameTree(frames.reference, frames.decay)) note += ' This is also the reference topology, so this decay fixes the root axes. ' + greenwichRule(frames);
-    else {
-      note += ` The root axes were fixed by the first daughter ${displayTree(frames.reference[0])} of the reference topology ${refLabel}, `
-        + `not by the first daughter ${displayTree(first)} of this decay. ` + greenwichRule(frames);
-    }
+    const note = `First decay of topology ${decLabel} in the common root axes R₀. ` + ROOT_RULE;
     return ['Rest frame of 0', decay, note, `Rest frame of $${ZERO}$`, decayM];
   }
   const role = frame.path[frame.path.length - 1].role;
@@ -259,12 +243,12 @@ function buildAnimation(frames, byLabel, keyOf, descriptions) {
   return { nodes, samples_per_operation: SAMPLES_PER_OPERATION, transitions, chains };
 }
 
-// ------------------------------------------------------------------ helicity alignment and Greenwich view
+// ------------------------------------------------------------------ helicity alignment
 /** Names for one step of a chain and its factors; factors that vanish are left out. */
 function describeEdge(edge, topology) {
   const head = label => label.split('|')[0];
   const node = text => (text.includes('(') ? parseTopology(text) : text);            // a final-state particle is a plain name
-  const parent = head(edge.parent).startsWith('R0^') ? 'R_0' : escape(displayTree(node(head(edge.parent))));
+  const parent = head(edge.parent) === 'R0' ? 'R_0' : escape(displayTree(node(head(edge.parent))));
   const childNode = node(head(edge.child));
   const child = escape(displayTree(childNode)), T = escape(topology);
   const ref = escape(index(node(edge.reference_daughter)));
@@ -296,27 +280,17 @@ function alignmentPayload(frames, color) {
   return data;
 }
 
-function greenwichPayload(frames, color) {
-  const data = greenwich(frames, tree => [displayTree(tree), hexColor(color(tree))]);
-  data.rule = greenwichRule(frames);
-  data.reference_first_label = displayTree(frames.reference[0]);
-  data.decay_first_label = displayTree(frames.decay[0]);
-  return data;
-}
-
 // ------------------------------------------------------------------ amplitude of the decay chain
 /** What the amplitude row needs: the vertices of the decay topology (frame, decaying system A, daughters B, C) and the final states in particle order. All numbers stay in the core; here only names and structure. */
 function amplitudePayload(frames, event) {
   const entry = node => ({ name: treeName(node), index: escape(index(node)), leaf: typeof node === 'string', display: displayTree(node), members: leaves(node) });
   const vertices = frames.decays.map(frame => {
     const [ref, spec] = frame.node;
-    const root = frame.label.startsWith('R0^');
+    const root = isRootLabel(frame.label);
     return { key: frame.key, node: treeName(frame.node), display: displayTree(frame.node), root,
       frame_markup: frameMarkup(frame.label), frame_label: displayFrame(frame.label),
       A: { index: root ? '0' : escape(index(frame.node)), internal: !root, members: leaves(frame.node) },
-      B: entry(ref), C: entry(spec),
-      // the first root azimuth of the reference topology is zero by the Greenwich choice
-      phi_zero: Boolean(root && sameTree(frames.reference[0], ref)) };
+      B: entry(ref), C: entry(spec) };
   });
   return { topology_label: frames.decayLabel, reference_label: frames.referenceLabel, letter: sameTree(frames.decay, frames.reference) ? 'λ' : 'ν',
            vertices, leaves: Object.keys(event.final_states).map(name => ({ name, index: escape(name) })) };
@@ -342,7 +316,7 @@ export function buildPayload(rawEvent) {
   const descriptions = {};
   const result = { viewer_schema: 2, event, reference_topology: treeName(frames.reference), decay_topology: treeName(frames.decay),
                    reference_label: frames.referenceLabel, decay_label: frames.decayLabel, warnings: frames.warnings, checks: frames.checks, figures: [] };
-  // The reference topology only orients the common root axes; its own decay is never shown as a figure.
+  // The reference topology serves the alignment of the helicity bases; its own decay is never shown as a figure.
   const pairColor = new Map();
   const ordered = Object.keys(event.final_states).slice(0, MAX_PLANE_PARTICLES);
   ordered.forEach((a, i) => {
@@ -394,6 +368,5 @@ export function buildPayload(rawEvent) {
   result.animation = buildAnimation(frames, byLabel, keyOf, descriptions);
   result.amplitude = amplitudePayload(frames, event);
   result.alignment = alignmentPayload(frames, color);
-  result.greenwich = greenwichPayload(frames, color);
   return result;
 }

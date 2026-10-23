@@ -1,7 +1,6 @@
 import { $, sym, state, setStatus, eventDecay } from './common.js';
 import { buildAnimations } from '../pages/dynamic/transport.js';
 import { buildAmplitudePage } from '../pages/amplitude/page.js';
-import { buildGreenwichPanel } from '../pages/greenwich/greenwich.js';
 import { buildNextStepPage } from '../pages/next-step/nextstep.js';
 import { initDecayForm, formToEvent, eventToForm, buildExample } from './decay_form.js';
 import { buildPayload } from '../core/payload.js';
@@ -44,7 +43,7 @@ async function compute({ reveal = false } = {}) {
 }
 
 // ------------------------------------------------------------------ pages
-const PAGES = ['dynamic', 'notation', 'amplitude', 'greenwich', 'next'];
+const PAGES = ['dynamic', 'notation', 'amplitude', 'next'];
 
 /** Shows one page of the application; pages that were built lazily are drawn when they become visible. */
 function showPage(name) {
@@ -55,7 +54,6 @@ function showPage(name) {
   requestAnimationFrame(() => {
     if (name === 'dynamic') state.animations.forEach(v => v.render());
     else if (name === 'amplitude') state.pages.amplitude?.draw();
-    else if (name === 'greenwich') state.pages.greenwich?.draw();
     else if (name === 'next') state.pages.next?.render();
   });
 }
@@ -75,15 +73,13 @@ function rebuild() {
   $('warnings').hidden = !warnings.length;
   $('warnings').textContent = [...new Set(warnings)].join('\n');
   state.animations.forEach(sim => sim.stop?.());
-  state.pages.greenwich?.stop?.(); state.pages.next?.view.stop(); state.pages.euler?.view.stop();
+  state.pages.next?.view.stop(); state.pages.euler?.view.stop();
   state.animations = buildAnimations(p);
   $('animations').replaceChildren(...state.animations.map(sim => sim.root));
   // explanation pages that belong to the event
   state.pages.amplitude = buildAmplitudePage(p);
   $('page-amplitude').replaceChildren(state.pages.amplitude.root);
   state.pages.euler = state.pages.amplitude.euler;                                // the content of the foldout on the page "Amplitude construction"
-  state.pages.greenwich = p.greenwich ? buildGreenwichPanel(p) : null;
-  $('page-greenwich').replaceChildren(...(state.pages.greenwich ? [state.pages.greenwich.root] : []));
   state.pages.next = buildNextStepPage(p);
   $('page-next').replaceChildren(...(state.pages.next ? [state.pages.next.root] : []));
   $('tab-next').hidden = !state.pages.next;

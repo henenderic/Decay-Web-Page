@@ -70,7 +70,7 @@ export function buildDerivation(payload, { link, euler, openNormalisation }) {
       // ---- the Lorentz transformation between the frames
       P(...mtex(`This state is obtained from the state in the frame `), tagNode(Fp), ...mtex(` by the Lorentz transformation $L$ between the two frames. It is the inverse of the transformation of the coordinates that the animation shows for this step, so its factors stand in the same order with the opposite signs of the angles:`)),
       D(raw`\lvert\,\cdot\,\rangle${sp}=L\,\lvert\,\cdot\,\rangle${sm}\,,\qquad L=${L}\,.`),
-      h('ul', { class: 'amp-factors' }, ops.map(op => h('li', {}, [sym(inverse(op)), ' ', ...mt(op.description.replace(/^(?!Greenwich)./, c => c.toLowerCase()) + '.')]))),
+      h('ul', { class: 'amp-factors' }, ops.map(op => h('li', {}, [sym(inverse(op)), ' ', ...mt(op.description.replace(/^./, c => c.toLowerCase()) + '.')]))),
       P(...mtex(`The vertex is a Lorentz scalar, $U(L)^{-1}\\,${vv}\\,U(L)=${vv}$. Inserting $L$ on both sides of the matrix element therefore does not change $${vv}$ but transforms the initial and the final state into the rest frame of $${tm}$, and the matrix element of the decay can be evaluated there:`)),
       D(raw`\begin{aligned}&${braAB}\,${vv}\,${ketM}\\ &={}${sm}\langle${pa},${pb};${la},${lb}\rvert\,U(L)^{-1}\,${vv}\,U(L)\,\lvert${pm};${lm}\rangle${sm}\\ &={}${sm}\langle${pa},${pb};${la},${lb}\rvert\,${vv}\,\lvert${pm};${lm}\rangle${sm}\,.\end{aligned}`),
 
@@ -82,7 +82,7 @@ export function buildDerivation(payload, { link, euler, openNormalisation }) {
       D(raw`h_{${la}${lb}}(\vtc{${v.display}})=\langle ${Em};J=${jm},M=${lm};${la},${lb}\vert\,${vv}\,\vert ${Em};${jm},${lm}\rangle\,.`),
       P(...mtex(`The bra of the final state brings the complex conjugate of the $D$ function. With the factor of the normalisation of the final state, the matrix element of the decay is`)),
       D(vertexAmplitudeTex(amp, v)),
-      P(...mtex(`The phase $(-1)^{${jb}-${lb}}$ belongs to the spectator and is explained below. The factor $\\sqrt{2\\pi/${rho}}$ is the phase-space factor of the two products; in the amplitude row of the `), link('dynamic', 'dynamic view'), ...mtex(` it is not written, since the row gives $\\mathcal M$ only up to such factors. The other factors are the terms that the animation adds to the row when it reaches the frame $${T(`[${Fm}]`)}$: the normalisation, the $D$ function, the phase and the coupling.${v.phi_zero ? ` The azimuth of $${ta}$ is zero in this frame, since the reference topology fixes the root axes (Greenwich convention).` : ''}`)),
+      P(...mtex(`The phase $(-1)^{${jb}-${lb}}$ belongs to the spectator and is explained below. The factor $\\sqrt{2\\pi/${rho}}$ is the phase-space factor of the two products; in the amplitude row of the `), link('dynamic', 'dynamic view'), ...mtex(` it is not written, since the row gives $\\mathcal M$ only up to such factors. The other factors are the terms that the animation adds to the row when it reaches the frame $${T(`[${Fm}]`)}$: the normalisation, the $D$ function, the phase and the coupling.`)),
     );
     return nodes;
   }

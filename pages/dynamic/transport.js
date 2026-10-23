@@ -436,7 +436,6 @@ function buildAnimation(payload, chain) {
   const pageLink = (page, text, title) => h('button', { type: 'button', class: 'link-button', title, text, onclick: () => state.showPage(page) });
   const pageLinks = h('div', { class: 'sub-section page-links' }, [h('span', { text: 'Explanations: ' }),
     pageLink('notation', 'Notation of the frame labels', 'How to read the labels in square brackets'),
-    pageLink('greenwich', 'Greenwich convention', 'Why the step R_z(−χ) is needed and how it fixes the root axes'),
     payload.alignment ? pageLink('next', 'Next step: helicities in the reference topology', 'How the helicity bases of the decay topology are aligned with the reference topology') : null]);
   const heading = h('div', { class: 'card-heading' }, [h('div', { class: 'heading-line' }, [headTitle, headTag, headLine])]);
   // three columns: options and view tools (left), the figure, and the choice of frames and steps with the legend (right)
