@@ -44,6 +44,29 @@ jobs:
           if [ "${{ steps.full.outcome }}" != "success" ] && [ "${{ steps.plain.outcome }}" = "success" ]; then cp -a _no_greenwich/. site/; fi
           rm -rf site/.git site/.github site/no-greenwich/.git site/no-greenwich/.github
           touch site/.nojekyll
+      - name: Give the files a version in their addresses
+        # Browsers keep the files of a page for ten minutes (GitHub Pages sends max-age=600). A visitor who has opened an older version of the page then gets old files
+        # together with the new ones and sees an error. A version in the address of every module (app.js?v=...) makes every deployment a set of new addresses.
+        run: |
+          cat > versioned_urls.py <<'EOF'
+          import pathlib, re, sys
+          site, version = pathlib.Path(sys.argv[1]), sys.argv[2]
+          if not (site/'index.html').exists():
+              sys.exit(0)
+          nested = site/'no-greenwich'                                                      # another version of the page below this one: not touched here
+          for path in site.rglob('*.js'):
+              if 'vendor' in path.parts or nested in path.parents:
+                  continue
+              text = path.read_text(encoding='utf-8')
+              path.write_text(re.sub(r"(from\s+')(\.{1,2}/[^'?]+\.js)(')", lambda m: f"{m.group(1)}{m.group(2)}?v={version}{m.group(3)}", text), encoding='utf-8')
+          index = site/'index.html'
+          html = index.read_text(encoding='utf-8')
+          html = html.replace('src="app/app.js"', f'src="app/app.js?v={version}"').replace('href="style.css"', f'href="style.css?v={version}"')
+          index.write_text(html, encoding='utf-8')
+          EOF
+          python3 versioned_urls.py site "${GITHUB_SHA::10}"
+          python3 versioned_urls.py site/no-greenwich "${GITHUB_SHA::10}"
+          grep -n "app.js" site/index.html
           ls site
       - uses: actions/upload-pages-artifact@v3
         with:
