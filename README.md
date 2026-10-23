@@ -36,8 +36,9 @@ The page is published by the workflow `.github/workflows/pages.yml` from the bra
 A repository has one Pages site, so the workflow assembles both branches into one site after every push to one of them; a branch that does not exist (yet) is left out. The workflow file is the same in both branches.
 
 1. Push the page to the branch `web` (and, for the second version, to `no-greenwich`).
-2. In the repository settings, open *Pages* and choose the source *GitHub Actions*.
-3. After a push the workflow runs (tab *Actions*); it can also be started by hand (*Run workflow*).
+2. In the repository settings, open *Pages* and choose the source *GitHub Actions* (not *Deploy from a branch*, which publishes one branch only).
+3. In the repository settings, open *Environments*, then `github-pages`, and under *Deployment branches and tags* allow the branches `web` and `no-greenwich` (or all branches). Otherwise the workflow stops before its first step, because it is run by a branch that is not allowed to deploy.
+4. After a push the workflow runs (tab *Actions*); it can also be started by hand (*Run workflow*). It gives the files of every deployment a version in their addresses (`app.js?v=…`), so that a browser that has opened an older version does not mix old and new files.
 
 ## Files
 
