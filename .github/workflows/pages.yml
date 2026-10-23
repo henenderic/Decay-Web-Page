@@ -1,9 +1,12 @@
-# Publishes the page on GitHub Pages whenever the main branch changes. The page is static: there is nothing to build.
-# In the settings of the repository, Pages must use the source "GitHub Actions".
+# Publishes the page on GitHub Pages whenever one of the two branches that hold a version of the page changes. The page is static: there is nothing to build.
+#   web           the complete page, at the address of the site
+#   no-greenwich  the page without the Greenwich angle, at <address of the site>/no-greenwich/
+# A repository has one Pages site, so both versions are assembled into one site; the version of a branch that does not exist (yet) is left out.
+# In the settings of the repository, Pages must use the source "GitHub Actions". The file is the same in both branches.
 name: Pages
 on:
   push:
-    branches: [main]
+    branches: [web, no-greenwich]
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,9 +22,31 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v5
+      - name: The complete page (branch web)
+        id: full
+        uses: actions/checkout@v5
+        with:
+          ref: web
+          path: _web
+        continue-on-error: true
+      - name: The page without the Greenwich angle (branch no-greenwich)
+        id: plain
+        uses: actions/checkout@v5
+        with:
+          ref: no-greenwich
+          path: _no_greenwich
+        continue-on-error: true
+      - name: Assemble the site
+        run: |
+          mkdir site
+          if [ "${{ steps.full.outcome }}" = "success" ]; then cp -a _web/. site/; fi
+          if [ "${{ steps.plain.outcome }}" = "success" ]; then mkdir -p site/no-greenwich && cp -a _no_greenwich/. site/no-greenwich/; fi
+          if [ "${{ steps.full.outcome }}" != "success" ] && [ "${{ steps.plain.outcome }}" = "success" ]; then cp -a _no_greenwich/. site/; fi
+          rm -rf site/.git site/.github site/no-greenwich/.git site/no-greenwich/.github
+          touch site/.nojekyll
+          ls site
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
       - id: deployment
         uses: actions/deploy-pages@v4
