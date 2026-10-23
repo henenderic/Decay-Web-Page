@@ -16,6 +16,8 @@ python3 -m http.server 8000
 
 and then `http://127.0.0.1:8000/` in a current browser. (Opening `index.html` directly from the file system does not work, because browsers do not load ES modules from `file://`.)
 
+Browsers keep the JavaScript files of the page in their cache for a while. After the files have changed (a new version on GitHub Pages, another branch checked out, an edited file), load the page again with Ctrl+Shift+R (Ctrl+F5); otherwise old and new files can mix, and the page then reports an error such as “null has no property replaceChildren”.
+
 The page starts with random momenta. A start event can be put in the address as JSON, for example
 
 ```
