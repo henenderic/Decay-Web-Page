@@ -2,7 +2,6 @@
 // Nothing is drawn or routed here. There is one finished image for the start view and one for every card (img/map-00.svg ... map-NN.svg, written by
 // llm/faq_map/build_faq_map.py); a click on a card loads its image, which shows the card with its connections. The positions of the cards in the images
 // are in layout.js, so that transparent buttons can be put over them. The images show the basics of a card only: the cards it needs and its "see also" cards.
-// The chart is scaled to the height of the window (style.css); opening the page scrolls it into view.
 import { h } from '../../app/common.js';
 import { FAQ_SIZE, FAQ_CARDS } from './layout.js';
 
@@ -22,7 +21,7 @@ export function buildFaqPage() {
     style: `left:${pct(c.x, FAQ_SIZE.width)};top:${pct(c.y, FAQ_SIZE.height)};width:${pct(c.w, FAQ_SIZE.width)};height:${pct(c.h, FAQ_SIZE.height)}`,
     onclick: () => select(c.n === selected ? 0 : c.n)
   }));
-  const map = h('div', { class: 'faq-map', style: `aspect-ratio:${FAQ_SIZE.width} / ${FAQ_SIZE.height}` }, [img, ...buttons]);
+  const map = h('div', { class: 'faq-map' }, [img, ...buttons]);
 
   function select(n) {
     selected = n;
@@ -47,14 +46,5 @@ export function buildFaqPage() {
   const key = (cls, label, numbers) => h('div', { class: 'faq-key-item' }, [h('div', { class: 'faq-key-label' }, [h('span', { class: `faq-line ${cls}` }), label]), numbers]);
   const info = h('div', { class: 'faq-info', role: 'status' }, [title, h('div', { class: 'faq-key' }, [key('solid', 'Needs', needsList), key('dashed', 'See also', seeList)])]);
   const root = h('div', { class: 'page-body faq' }, [h('div', { class: 'faq-stage' }, [map]), info]);
-  // Scrolls the chart into view. The page above it can still change its height while the page starts (formulas are set), so the scroll is repeated once
-  // after a moment, unless the reader has scrolled in the meantime.
-  let scrolled = false;
-  for (const type of ['wheel', 'touchstart', 'keydown']) window.addEventListener(type, () => { scrolled = true; }, { passive: true });
-  const reveal = () => {
-    scrolled = false;
-    root.scrollIntoView({ block: 'start' });
-    setTimeout(() => { if (!scrolled && root.offsetParent !== null && Math.abs(root.getBoundingClientRect().top) > 4) root.scrollIntoView({ block: 'start' }); }, 500);
-  };
-  return { root, reveal };
+  return { root };
 }

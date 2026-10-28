@@ -56,7 +56,6 @@ function showPage(name) {
     if (name === 'dynamic') state.animations.forEach(v => v.render());
     else if (name === 'amplitude') state.pages.amplitude?.draw();
     else if (name === 'next') state.pages.next?.render();
-    else if (name === 'faq') state.pages.faq?.reveal();                           // the chart fills the window: scroll it into view
   });
 }
 state.showPage = showPage;
@@ -95,8 +94,7 @@ async function init() {
   initDecayForm();
   if (state.config.initial_event) eventToForm(state.config.initial_event);       // an event in the address (?event=...)
   else buildExample();                                                           // otherwise the page starts with random momenta of a decay into three particles
-  state.pages.faq = buildFaqPage();                                            // the flow chart of the FAQ does not depend on the event
-  $('page-faq').replaceChildren(state.pages.faq.root);
+  $('page-faq').replaceChildren(buildFaqPage().root);                           // the flow chart of the FAQ does not depend on the event
   $('event-form').addEventListener('submit', e => { e.preventDefault(); compute({ reveal: true }); });
   $('event-form').addEventListener('input', () => changed());
   $('build-example').addEventListener('click', () => { buildExample(); changed(); });
