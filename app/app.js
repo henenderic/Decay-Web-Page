@@ -2,6 +2,7 @@ import { $, sym, state, setStatus, eventDecay } from './common.js';
 import { buildAnimations } from '../pages/dynamic/transport.js';
 import { buildAmplitudePage } from '../pages/amplitude/page.js';
 import { buildNextStepPage } from '../pages/next-step/nextstep.js';
+import { buildFaqPage } from '../pages/faq/faq.js';
 import { initDecayForm, formToEvent, eventToForm, buildExample } from './decay_form.js';
 import { buildPayload } from '../core/payload.js';
 import { initialEventFromAddress } from '../core/address.js';
@@ -43,7 +44,7 @@ async function compute({ reveal = false } = {}) {
 }
 
 // ------------------------------------------------------------------ pages
-const PAGES = ['dynamic', 'notation', 'amplitude', 'next'];
+const PAGES = ['dynamic', 'notation', 'amplitude', 'next', 'faq'];
 
 /** Shows one page of the application; pages that were built lazily are drawn when they become visible. */
 function showPage(name) {
@@ -55,6 +56,7 @@ function showPage(name) {
     if (name === 'dynamic') state.animations.forEach(v => v.render());
     else if (name === 'amplitude') state.pages.amplitude?.draw();
     else if (name === 'next') state.pages.next?.render();
+    else if (name === 'faq') state.pages.faq?.reveal();                           // the chart fills the window: scroll it into view
   });
 }
 state.showPage = showPage;
@@ -93,6 +95,8 @@ async function init() {
   initDecayForm();
   if (state.config.initial_event) eventToForm(state.config.initial_event);       // an event in the address (?event=...)
   else buildExample();                                                           // otherwise the page starts with random momenta of a decay into three particles
+  state.pages.faq = buildFaqPage();                                            // the flow chart of the FAQ does not depend on the event
+  $('page-faq').replaceChildren(state.pages.faq.root);
   $('event-form').addEventListener('submit', e => { e.preventDefault(); compute({ reveal: true }); });
   $('event-form').addEventListener('input', () => changed());
   $('build-example').addEventListener('click', () => { buildExample(); changed(); });
