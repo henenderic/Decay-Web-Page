@@ -74,7 +74,7 @@ export function buildAmplitudePage(payload) {
       P(...mtex(`$\\prt{A}$ and $\\prt{B}$ stand for the particles of the beam and of the target (or of the second beam) that interact in the region of the detector. Parts of the beam, and at colliders also of the target or of the opposite beam, do not interact or interact only elastically, that is, without producing new particles. They can be measured by the detectors as well and therefore appear in the final state too. Furthermore the final states of the decay under study, $\\prt{0}\\to\\prt{1}+\\dots+\\prt{n}$, are observed together with further particles that are of no interest here; these are summarised in a state $\\mathrm{X}$ and flow into the background. The process thus splits into a part in which the particles do not interact at all and a part in which they do, elastically or with the production of new particles:`)),
       D(raw`S=\underbrace{\one}_{\text{no interaction}}-\underbrace{i\,2\pi\,\delta(E_f-E_i)\,T}_{\text{interaction}}`),
       P(...mtex(`This is the $S$ matrix, or scattering matrix, and it describes the whole scattering process. The second matrix, $T$, is called the transition matrix; it stands for the actual reaction of the particles. It conserves the energy explicitly through the $\\delta$ function $2\\pi\\,\\delta(E_f-E_i)$.`)),
-      foldout('s-matrix-details', 'From the S matrix to the matrix element', [
+      foldout('s-matrix-details', 'From the S Matrix to the Matrix Element', [
         P(...mtex(`The $S$ matrix is unitary; it maps the states of the free particles before the collision onto the states after it. The interaction does not depend on the time at which it acts, so the energy is conserved, and $\\langle f\\vert S-\\one\\vert i\\rangle$ contains the factor $\\delta(E_f-E_i)$. The rest is, by definition, the matrix element of $T$:`)),
         D(raw`\langle f\vert\,S\,\vert i\rangle=\langle f\vert i\rangle-i\,2\pi\,\delta(E_f-E_i)\,\langle f\vert\,T\,\vert i\rangle\,.`),
         P(...mtex(`The interaction does not depend on the place at which it acts either, so $T$ conserves the total momentum $\\vec P=\\sum_i\\vec p_i$, and its matrix element factorises into a $\\delta$ function and the matrix element $\\mathcal M_{fi}$ (the factor $(2\\pi)^3$ is a convention):`)),
@@ -87,12 +87,12 @@ export function buildAmplitudePage(payload) {
       P('In the detectors the tracks, momenta and types of the final-state particles of a decay can be resolved. The type of a particle is determined from its energy loss, its time of flight, the Cherenkov light it emits, or its signal in a calorimeter or muon detector; its momentum is determined from the curvature of its track in the magnetic field of the detector. In an involved analysis a “large picture” of the scattering process is then made from the many individually measured tracks, and single tracks are combined, whereby production and decay vertices can be found. From the four-momenta of the final states of a decay vertex, which are then known, the invariant mass and the momentum of the decaying mother can be determined. The distribution of the invariant masses determined in this way has accumulations at the masses of the mother and of the dominant resonances of this decay. The resonances are an essential ingredient for building a model of a decay, and their mass, width, spin and parity can be read from the fitted models. Particles that could not be assigned to a vertex form the rest of the measured background. How such a model comes about is the subject of the following sections.'),
       figure(svgNode(buildVertexFigure(leaves.length)), [...mtex(`Sketch of a measured event. The mother $\\prt{0}$ is produced at the primary vertex and decays after a short flight at the secondary vertex into the final states $\\prt{1},\\dots$ Charged particles are bent in the magnetic field of the detector (full lines), neutral particles fly straight and leave no track in the tracking detector (dashed lines); the mother is not measured directly. The style follows Fig. 1 of `),
         ext(DOI('10.1140/epjc/s10052-021-09342-y'), 'J. Shlomi et al., Eur. Phys. J. C 81, 540 (2021)'), '.']),
-      foldout('dalitz-details', 'How the mother and the resonances are found', [
+      foldout('dalitz-details', 'How the Mother and the Resonances Are Found', [
         P(...mtex(`For the final states that belong to one decay, $m^2=(\\sum_i p_i)^2$ is the invariant mass squared. A peak in its distribution marks the mother; the same quantity for a subset of the final states marks a resonance that decays into this subset.`)),
-        h('h4', { text: 'Three particles: the Dalitz plot' }),
+        h('h4', { text: 'Three Particles: The Dalitz Plot' }),
         P(...mtex(`The decay of a spin-0 mother into three spin-0 particles has two independent kinematic variables. A decay into $n$ particles has $3n-4$ kinematic variables; three of them are the orientation of the decay in space, so $3n-7$ remain, which is 2 for $n=3$. A convenient choice is the pair of invariant masses $m_{12}^2$ and $m_{23}^2$. Every decay is one point in this plane, and the plot of many decays is the Dalitz plot (Dalitz 1953). The phase-space element is constant in these variables, so without any dynamics the allowed region would be filled uniformly. Structure therefore shows the amplitude: a resonance in the system of the particles $1$ and $2$ is a band at constant $m_{12}^2$, its width is the width of the resonance, and its spin shows in the distribution along the band. Where bands cross, they interfere.`)),
         figure(svgNode(buildDalitzPlot()), mtex(`Schematic Dalitz plot of a decay into three particles. The allowed region is bounded by energy and momentum conservation; a resonance in the pair $12$, $23$ or $13$ gives a vertical, a horizontal or a diagonal band.`), true),
-        h('h4', { text: 'More than three particles' }),
+        h('h4', { text: 'More than Three Particles' }),
         P('For four and more particles the invariant masses of pairs and triples no longer describe all kinematic degrees of freedom; parity-odd variables, for example the angle between two decay planes, are needed. The Dalitz plot does not generalise to a two-dimensional plot, and resonances are found in three steps: (i) projections on the invariant masses of all subsets of the final states, (ii) the angular distributions, in particular of the helicity angles of every decay of the chain, and (iii) a multidimensional fit of an amplitude to all variables at the same time. The amplitude is a coherent sum of decay chains, each of which is built from decays into two particles. This is the amplitude whose construction is the subject of the following sections.'),
         small('Literature: ', ext(DOI('10.1080/14786441008520365'), 'R. H. Dalitz, Phil. Mag. 44, 1068 (1953)'), '; ', ext(DOI('10.1103/PhysRevD.110.030001'), 'Particle Data Group, Review of Particle Physics'), ', sections “Kinematics” (Dalitz plot, multibody phase space) and “Multibody charm analyses”; ',
           ext(DOI('10.1103/PhysRevD.101.034033'), 'M. Mikhasenko et al., Phys. Rev. D 101, 034033 (2020)'), '; ', ext(DOI('10.1103/PhysRevD.111.056015'), 'J. Habermann and M. Mikhasenko, Phys. Rev. D 111, 056015 (2025)'),
@@ -115,7 +115,7 @@ export function buildAmplitudePage(payload) {
       P(...mtex(`Here too masses and spins are left out to save space in the notation. The state is thus the product of the states of $n$ single particles.`)));
 
     // ================================================================ Filling the Blobs
-    const lippmann = foldout('lippmann-details', 'Derivation of the Lippmann–Schwinger equation', [
+    const lippmann = foldout('lippmann-details', 'Derivation of the Lippmann–Schwinger Equation', [
       P(...mtex(`Let $H=H_0+V$ be the Hamiltonian, with the free part $H_0$, whose eigenstates $\\lvert\\phi\\rangle$ are the states of the free particles, $H_0\\lvert\\phi\\rangle=E\\lvert\\phi\\rangle$. A scattering state $\\lvert\\psi\\rangle$ of the same energy obeys the Schrödinger equation $(E-H_0)\\lvert\\psi\\rangle=V\\lvert\\psi\\rangle$. Its formal solution, which contains the free state and an outgoing wave, is`)),
       D(raw`\lvert\psi\rangle=\lvert\phi\rangle+G_0\,V\,\lvert\psi\rangle\,,\qquad G_0=\frac{1}{E-H_0+i0}\,.`),
       P(...mtex(`The infinitesimal $+i0$ makes the inverse defined and selects the outgoing wave; $G_0$ is the propagator of the free particles. The $T$ matrix is defined by the action of the interaction on the scattering state, $T\\lvert\\phi\\rangle=V\\lvert\\psi\\rangle$. Multiplying the equation above with $V$ gives $V\\lvert\\psi\\rangle=V\\lvert\\phi\\rangle+V\\,G_0\\,V\\lvert\\psi\\rangle$, that is,`)),
@@ -168,7 +168,7 @@ export function buildAmplitudePage(payload) {
 
   // ================================================================ A single Decay Vertex: the Euler rotations, the circles around the vertices, the derivation for the selected decay, the phase of the spectator
   const euler = buildEulerPage({ next: !!payload.alignment });
-  const prerequisite = h('details', { class: 'euler-details', id: 'euler-details' }, [h('summary', {}, [h('span', { class: 'prerequisite-label', text: 'Prerequisite: Euler rotations' }), h('span', { class: 'prerequisite-hint', text: ' (click to show)' })]), euler.root]);
+  const prerequisite = h('details', { class: 'euler-details', id: 'euler-details' }, [h('summary', {}, [h('span', { class: 'prerequisite-label', text: 'Prerequisite: Euler Rotations' }), h('span', { class: 'prerequisite-hint', text: ' (click to show)' })]), euler.root]);
   prerequisite.addEventListener('toggle', () => { if (prerequisite.open) requestAnimationFrame(() => euler.render()); else euler.view.stop(); });
 
   if (topology && vertices.length) {
@@ -180,14 +180,14 @@ export function buildAmplitudePage(payload) {
       if (!v) return;
       const m = v.root ? named('0', false) : itl(v.display);
       readout.style.borderColor = diagram.circleColor(entry.name);
-      readout.replaceChildren(h('div', { class: 'amp-readout-title' }, ['Selected decay']), sym(`${m} → ${label(v.B)} + ${label(v.C)}`, true),
+      readout.replaceChildren(h('div', { class: 'amp-readout-title' }, ['Selected Decay']), sym(`${m} → ${label(v.B)} + ${label(v.C)}`, true),
                               h('div', { class: 'amp-readout-frame' }, ['rest frame of ', sym(m), ': ', tagNode(v.frame_markup)]));
     };
     const derivation = buildDerivation(payload, { link, euler: prerequisite, openNormalisation: openFoldout('normalisation-details') });
     const select = entry => { show(entry); const v = byNode.get(entry.name); if (v) derivation.show(v); };
     const diagram = buildSketch(topology, { width: 540, labelPx: 13, circles: { onSelect: select } });
     diagram.select(diagram.layout.root.name);
-    blocks.push(heading3('A single Decay Vertex'),
+    blocks.push(heading3('A Single Decay Vertex'),
       P(...mtex(`A decay chain consists of single decays of one particle into two, and every one of them is described in the same way. The diagram below marks each decay of the chain of this event by a circle, in a red that gets darker with the depth in the chain. A click on a circle selects the decay to which the derivation below is applied: the mother $m$, the reference particle $a$ and the spectator $b$ of the states above are replaced by the particles of the selected decay, and the frames of the states and the Lorentz transformation between them come from the selected vertex. The derivation ends with the phase of the spectator.`)),
       h('div', { class: 'amp-figure' }, diagram.svg), readout, derivation.root, ...buildSpectatorPhase());
   }
@@ -197,6 +197,6 @@ export function buildAmplitudePage(payload) {
     blocks.push(...buildChain(payload, { link, projection }), P(...firstOrFurther));
   }
 
-  const root = h('div', { class: 'page-body amplitude-text' }, [h('h2', { text: 'Amplitude construction' }), ...blocks]);
+  const root = h('div', { class: 'page-body amplitude-text' }, [h('h2', { text: 'Amplitude Construction' }), ...blocks]);
   return { root, draw: () => { if (prerequisite.open) euler.render(); }, stop: () => euler.view.stop(), euler, openEuler: () => { prerequisite.open = true; return prerequisite; } };
 }

@@ -25,8 +25,8 @@ export function buildAmplitude({ payload, figs, cum, trans }) {
   const missing = vertices.length > onChain.length;                 // a branch that belongs to another animation
   const root = h('div', { class: 'amplitude-row' });
   const formula = h('div', { class: 'amplitude-align' });                // an align: the head, then one line per step, the signs below each other
-  const link = h('button', { type: 'button', class: 'link-button', text: 'How the amplitude is formed', title: 'Opens the page Amplitude construction', onclick: () => state.showPage('amplitude') });
-  root.append(h('div', { class: 'amplitude-head' }, [h('span', { class: 'opt-title' }, ['Amplitude of the decay chain ', sym(up(K))]), ' ', link]), formula);
+  const link = h('button', { type: 'button', class: 'link-button', text: 'How the amplitude is formed', title: 'Opens the page Amplitude Construction', onclick: () => state.showPage('amplitude') });
+  root.append(h('div', { class: 'amplitude-head' }, [h('span', { class: 'opt-title' }, ['Amplitude of the Decay Chain ', sym(up(K))]), ' ', link]), formula);
 
   // ---------------------------------------------------------------- tooltips
   const tip = (title, text) => h('span', { class: 'tip', role: 'tooltip' }, [h('span', { class: 'tip-title' }, title), h('span', { class: 'tip-text' }, Array.isArray(text) ? text : mt(text))]);

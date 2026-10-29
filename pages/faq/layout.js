@@ -36,3 +36,9 @@ export const FAQ_CARDS = [
   { n: 32, title: 'What Must Be Specified for Two Programs to Give the Same Amplitude?', x: 440, y: 1260, w: 140, h: 80, needs: [30], neededBy: [], see: [1, 5, 7, 15, 19, 21, 22, 24, 26, 29, 31] },
   { n: 33, title: 'What Does This Model Not Cover?', x: 620, y: 1260, w: 140, h: 80, needs: [30], neededBy: [], see: [16, 24, 26, 29, 31] },
 ];
+// The reading paths of the outline: the cards that are relevant for a purpose, in the order of their numbers.
+export const FAQ_PATHS = [
+  { key: 'apply', label: 'Apply', cards: [1, 2, 3, 17, 24, 28, 30, 31, 32] },
+  { key: 'derive', label: 'Derive', cards: [4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26] },
+  { key: 'implement', label: 'Implement', cards: [5, 6, 7, 19, 22, 23, 24, 27, 29, 32, 33] },
+];

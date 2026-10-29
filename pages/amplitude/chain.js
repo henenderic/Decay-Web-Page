@@ -66,7 +66,7 @@ export function buildChain(payload, { link, projection }) {
   const product = raw`\begin{aligned}&${head}\ \propto\\ ${[raw`&\quad ${termRows[0]}`, ...termRows.slice(1).map(row => raw`&\quad\times\ ${row}`)].join(raw`\\ `)}\end{aligned}`;
 
   // ---------------------------------------------------------------- the text
-  const nodes = [h('h3', { text: 'From a single Decay to a Decay Chain' })];
+  const nodes = [h('h3', { text: 'From a Single Decay to a Decay Chain' })];
   const resonances = vertices.length-1;
   nodes.push(
     sentence(`The decay chain chosen above, $\\text{${K}}$, corresponds to the contribution $T^{\\text{${K}}}$ to the decay amplitude. It is the product of the vertices $V$ of the single decays and the propagators $G$ of the intermediate states. A vertex acts only on the particles that take part in its decay; on all other objects it acts as the unit operator, $\\otimes\\,\\one$, so that every factor of the product is a tensor product over all objects that are present at that stage:`),

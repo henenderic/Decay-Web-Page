@@ -108,5 +108,5 @@ export function buildLegend(model, o) {
   return h('div', { class: 'legend' }, [
     h('div', { class: 'legend-head' }, o.moving ? `Legend: momenta during the transformation ${o.frameName}` : ['Legend: objects shown in ', tagNode(model.tag)]),
     o.moving ? h('p', { class: 'legend-note', text: 'The momenta are shown between two frames; labels carry no frame mark.' }) : null,
-    h('div', { class: 'legend-columns' }, [section('Momenta', momenta), section('Angles and parameters', meanings), section('Planes and labels', other)].filter(Boolean))]);
+    h('div', { class: 'legend-columns' }, [section('Momenta', momenta), section('Angles and Parameters', meanings), section('Planes and Labels', other)].filter(Boolean))]);
 }

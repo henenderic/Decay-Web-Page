@@ -33,6 +33,10 @@ function mergeChains(chains) {
   return { target: chains[chains.length-1].target, stages, returns };
 }
 
+/** The titles of the frames come from the computation core in sentence case; as headings they are set in Title Case. */
+const headingCase = markup => markup.replace(/^Laboratory frame/, 'Laboratory Frame').replace(/^Rest frame of/, 'Rest Frame of')
+  .replace('(reference topology)', '(Reference Topology)').replace('(all final states)', '(All Final States)');
+
 export function buildAnimations(payload) {
   return [buildAnimation(payload, mergeChains(payload.animation.chains))];
 }
@@ -273,7 +277,7 @@ function buildAnimation(payload, chain) {
         'In ', tagNode(f.tag_markup), ': ', ...names.flatMap((name, k) => [k ? ', ' : '', sym(`λ_{${indexOf(name)}}`)]),
         h('button', { type: 'button', title: 'Jump to this frame without animation', text: atStage === i ? 'shown' : 'Show frame', disabled: atStage === i, onclick: () => jump(cum[i]) })]);
     }).filter(Boolean);
-    helBox.replaceChildren(h('div', { class: 'hel-title', text: 'Frame in which each helicity is defined' }), ...rows,
+    helBox.replaceChildren(h('div', { class: 'hel-title', text: 'Frame in Which Each Helicity Is Defined' }), ...rows,
       h('div', { class: 'hel-note', text: 'The labels in the figures always refer to the frame that is displayed; the rest frame of the parent of a particle is the frame of its helicity.' }));
   };
 
@@ -321,11 +325,11 @@ function buildAnimation(payload, chain) {
     const c = current();
     if (!c.moving) {
       const f = figs[c.stage];
-      headTitle.replaceChildren(...mt(f.title_markup)); headLine.replaceChildren(sym(f.decay_markup)); headTag.replaceChildren(tagNode(f.tag_markup));
+      headTitle.replaceChildren(...mt(headingCase(f.title_markup))); headLine.replaceChildren(sym(f.decay_markup)); headTag.replaceChildren(tagNode(f.tag_markup));
       return;
     }
     const A = figs[c.t], B = figs[c.t+1], n = trans[c.t].operations.length;
-    headTitle.replaceChildren(...mt(A.title_markup), ' → ', ...mt(B.title_markup));
+    headTitle.replaceChildren(...mt(headingCase(A.title_markup)), ' → ', ...mt(headingCase(B.title_markup)));
     headLine.textContent = run.playing ? `Step ${describeStep(playingStep(run.playing)).k + 1} of ${n} in progress` : `After step ${run.p - cum[c.t]} of ${n}`;
     headTag.replaceChildren(tagNode(A.tag_markup), ' → ', tagNode(B.tag_markup));
   }
@@ -436,10 +440,10 @@ function buildAnimation(payload, chain) {
   const pageLink = (page, text, title) => h('button', { type: 'button', class: 'link-button', title, text, onclick: () => state.showPage(page) });
   const pageLinks = h('div', { class: 'sub-section page-links' }, [h('span', { text: 'Explanations: ' }),
     pageLink('notation', 'Notation of the frame labels', 'How to read the labels in square brackets'),
-    payload.alignment ? pageLink('next', 'Next step: helicities in the reference topology', 'How the helicity bases of the decay topology are aligned with the reference topology') : null]);
+    payload.alignment ? pageLink('next', 'Next Step: Helicities in the Reference Topology', 'How the helicity bases of the decay topology are aligned with the reference topology') : null]);
   const heading = h('div', { class: 'card-heading' }, [h('div', { class: 'heading-line' }, [headTitle, headTag, headLine])]);
   // three columns: options and view tools (left), the figure, and the choice of frames and steps with the legend (right)
-  const sketchBox = sketch ? h('div', { class: 'sketch-box' }, [h('div', { class: 'opt-title' }, ['Decay topology ', sym(up(payload.topologies.decay_label))]), sketch.svg]) : null;
+  const sketchBox = sketch ? h('div', { class: 'sketch-box' }, [h('div', { class: 'opt-title' }, ['Decay Topology ', sym(up(payload.topologies.decay_label))]), sketch.svg]) : null;
   const right = h('div', { class: 'card-right' }, [h('div', { class: 'stage-strip-box' }, [h('div', { class: 'opt-title', text: 'Frames' }), strip]),
     h('div', { class: 'step-panel' }, [stepNow, bar, rows]), controls, sketchBox, helBox]);
   const amplitudeSlot = h('div', { class: 'amplitude-slot' }, amplitude ? amplitude.root : []);          // the amplitude that is built up step by step, above the legend

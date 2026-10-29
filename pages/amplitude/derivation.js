@@ -11,7 +11,7 @@ const raw = String.raw;
 export function buildNormalisation(foldout) {
   const P = (...nodes) => h('p', {}, nodes.flat());
   const D = tex => h('div', { class: 'formula' }, [texNode(tex, { display: true })]);
-  return foldout('normalisation-details', 'The states and their normalisation', [
+  return foldout('normalisation-details', 'The States and Their Normalisation', [
     P(...mtex(`A state of one particle with the momentum $\\vec p$ and the helicity $\\lambda$ is normalised so that the normalisation itself is Lorentz invariant, and the space of these states is complete in every frame:`)),
     D(raw`\langle\vec p\,';\lambda'\vert\vec p;\lambda\rangle=(2\pi)^3\,2E\,\delta^3(\vec p\,'-\vec p)\,\delta_{\lambda'\lambda}\,,\qquad \one=\sum_\lambda\int\frac{\Int^3p}{(2\pi)^3\,2E}\,\lvert\vec p;\lambda\rangle\langle\vec p;\lambda\rvert\,.`),
     P(...mtex(`The state of two particles, the products $a$ and $b$ of a decay, is the product of the two one-particle states, $\\lvert\\vec p_a,\\vec p_b;\\lambda_a,\\lambda_b\\rangle=\\lvert\\vec p_a;\\lambda_a\\rangle\\otimes\\lvert\\vec p_b;\\lambda_b\\rangle$, with the normalisation and the completeness`)),
@@ -63,7 +63,7 @@ export function buildDerivation(payload, { link, euler, openNormalisation }) {
         tagNode(Fp), ...mtex(`, in which $${tm}$ has the momentum $${pm}$. The rest frame of $${tm}$ is `), tagNode(Fm), '. The frame labels on the states say in which frame momenta and helicities are measured.'),
       P(...mtex(`The initial state is the state of $${tm}$ with its momentum and helicity, the final state is the state of the two products as free particles, and the transition between them is described by the interaction $${vv}$ of this vertex:`)),
       D(raw`${braAB}\,${vv}\,${ketM}\,.`),
-      P(...mtex(`The vertex conserves the four-momentum, $p_{${im}}^\\mu=p_{${ia}}^\\mu+p_{${ib}}^\\mu$, and this holds in every frame. It can be used to simplify the problem: in the rest frame of $${tm}$ the total momentum $\\vec P$ of the two products vanishes. Their state is then labelled by the total momentum $P^\\mu$ and the relative momentum $q^\\mu$ instead of $${pa}$ and $${pb}$, $\\lvert${pa},${pb};${la},${lb}\\rangle=\\lvert\\vec P,\\vec q;${la},${lb}\\rangle$, where $\\vec q=${pa}$ is the momentum of the reference particle. How these states are defined and normalised, and how they are split into a state of the four-momentum and a state of the direction of $${ta}$, is shown in the foldout `), h('button', { type: 'button', class: 'link-button', text: 'The states and their normalisation', onclick: openNormalisation }), '.'),
+      P(...mtex(`The vertex conserves the four-momentum, $p_{${im}}^\\mu=p_{${ia}}^\\mu+p_{${ib}}^\\mu$, and this holds in every frame. It can be used to simplify the problem: in the rest frame of $${tm}$ the total momentum $\\vec P$ of the two products vanishes. Their state is then labelled by the total momentum $P^\\mu$ and the relative momentum $q^\\mu$ instead of $${pa}$ and $${pb}$, $\\lvert${pa},${pb};${la},${lb}\\rangle=\\lvert\\vec P,\\vec q;${la},${lb}\\rangle$, where $\\vec q=${pa}$ is the momentum of the reference particle. How these states are defined and normalised, and how they are split into a state of the four-momentum and a state of the direction of $${ta}$, is shown in the foldout `), h('button', { type: 'button', class: 'link-button', text: 'The States and Their Normalisation', onclick: openNormalisation }), '.'),
       P(...mtex(`In the rest frame of $${tm}$ the state of the two products is then fixed by the energy $${Em}$ and the solid angle $\\Omega$ of $${ta}$ alone:`)),
       D(raw`\lvert\vec P,\vec q;${la},${lb}\rangle${sm}=\sqrt{\frac{2\pi}{${rho}}}\;\lvert\vec P=0\rangle${sm}\otimes\lvert ${Em}\rangle${sm}\otimes\lvert\Omega;${la},${lb}\rangle${sm}\,.`),
 
@@ -96,7 +96,7 @@ export function buildSpectatorPhase() {
   const P = (...nodes) => h('p', {}, nodes.flat());
   const D = tex => h('div', { class: 'formula' }, [texNode(tex, { display: true })]);
   return [
-    h('h4', { text: 'The phase of the spectator' }),
+    h('h4', { text: 'The Phase of the Spectator' }),
     P(...mtex(`The two daughters of a decay are treated differently in the helicity formalism. In the rest frame of the decaying particle the reference particle $a$ is reached from its own rest frame by the rotation $R(\\varphi,\\vartheta,0)=R_z(\\varphi)R_y(\\vartheta)$ and a boost along $z$. The spectator $b$ is reached by the same rotation, a half-turn about the $y$ axis and the boost:`)),
     D(raw`\Lambda_{m\leftarrow a}=R(\varphi,\vartheta,0)\,B_z(\eta_a)\,,\qquad\Lambda_{m\leftarrow b}=R(\varphi,\vartheta,0)\,R_y(\pi)\,B_z(\eta_b)\,.`),
     P(...mtex(`The half-turn $R_y(\\pi)$ is the factor that the animation shows as the step $R_y(-\\pi)$ in the transport of a spectator. Because the state of the second particle is defined with it, the amplitude of a decay is written with the helicity vertex function $H$, and this function differs from the helicity coupling $h$ in the convention of the second particle by a phase,`)),

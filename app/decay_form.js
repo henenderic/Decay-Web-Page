@@ -45,7 +45,7 @@ function createCard(role) {
   const field = (cls, label, readonly) => h('input', { class: 'comp '+cls, inputmode: 'decimal', 'aria-label': label, readonly, spellcheck: 'false' });
   const m = field('f-m', 'Mass', true), e = field('f-e', 'Energy', mother);
   const px = field('f-px', 'Momentum px', mother), py = field('f-py', 'Momentum py', mother), pz = field('f-pz', 'Momentum pz', mother);
-  const head = h('div', { class: 'pc-head' }, h('h4', {}, [mother ? 'Mother ' : 'Final state ', h('span', { class: 'pc-number', text: mother ? '0' : '' })]));
+  const head = h('div', { class: 'pc-head' }, h('h4', {}, [mother ? 'Mother ' : 'Final State ', h('span', { class: 'pc-number', text: mother ? '0' : '' })]));
   const table = h('table', { class: 'input-table pc-table' }, [
     h('thead', {}, h('tr', {}, [h('th', {}, sym('m')), h('th', {}, sym('E')), h('th', {}, sym('p_x')), h('th', {}, sym('p_y')), h('th', {}, sym('p_z'))])),
     h('tbody', {}, h('tr', {}, [m, e, px, py, pz].map(i => h('td', {}, i))))]);

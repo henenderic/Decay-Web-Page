@@ -42,7 +42,7 @@ export function buildNextStepPage(payload) {
       const rotations = edge.factors.filter(f => f.operator !== 'Bz').map(f => f.markup).join(' '), boost = edge.factors.filter(f => f.operator === 'Bz').map(f => f.markup).join(' ');
       return h('tr', {}, [h('td', {}, sym(edge.label)), h('td', {}, rotations ? sym(rotations) : '–'), h('td', {}, boost ? sym(boost) : '–'), h('td', { class: 'step-sketch' }, stepSketch(edge, topology))]);
     }))]);
-  const link = () => h('button', { type: 'button', class: 'link-button', text: 'Euler rotations', title: 'Opens the section Euler rotations on the page Amplitude construction', onclick: () => state.showEuler() });
+  const link = () => h('button', { type: 'button', class: 'link-button', text: 'Euler rotations', title: 'Opens the section Euler Rotations on the page Amplitude Construction', onclick: () => state.showEuler() });
 
   // ---------------------------------------------------------------- the particle table: where the helicity is measured and the paths
   const chooser = h('div', { class: 'align-chooser' });
@@ -58,13 +58,13 @@ export function buildNextStepPage(payload) {
 
   // ---------------------------------------------------------------- the explanation, in the order of the construction
   const part1 = h('div', { class: 'next-part' }, [
-    h('h3', { text: 'Two bases for one state' }),
+    h('h3', { text: 'Two Bases for One State' }),
     h('p', {}, ['The helicity of a final-state particle is measured in the frame of the decay that produced it: in the rest frame of its parent, along the direction of motion of the particle in that frame. ',
       'In the decay topology ', Ks(), ' and in the reference topology ', Is(), ' the same particle is produced by different decays, so its helicity is measured in different frames; the table below lists them for every particle.']),
     h('p', {}, ['From the frame of measurement the particle is carried into its own rest frame, and a chain of rotations and boosts leads from there, through the frame of measurement and the frames above it, up to the common root frame. ',
       'The two topologies use different chains for the same particle. The rest frames of the particle at the end of the two chains have the same rest momentum but, in general, different axes, ',
       'and a helicity label of ', Ks(), ' does not denote the same spin state as the same label of ', Is(), '. Only when every spin state is expressed in the basis of ', Is(), ' can the amplitudes of both topologies be added coherently.']),
-    h('h3', { text: 'The steps of the chains' }),
+    h('h3', { text: 'The Steps of the Chains' }),
     h('p', {}, mt('Every decay transports the rest frame of one of its daughters into the rest frame of its parent. Let $C$ be the transported daughter and $B$ the first (reference) daughter of the decay. The transport is the product')),
     F('L_{parent←C} = R_z(φ_B) R_y(ϑ_B) B_z(η_C),'),
     h('p', {}, mt('in which the rightmost factor acts first, and for the second daughter the half-turn $R_y(π)$ stands in front of the boost. $B_z(η_C)$ is the boost along $z$ with the rapidity of $C$ in the parent frame. The half-turn takes care of the second daughter moving opposite to the first one. $R_y(ϑ_B)$ and $R_z(φ_B)$ turn the $z$ axis into the direction of $B$ in the parent frame, with the polar angle $ϑ_B$ and the azimuth $φ_B$. Factors with the value zero are left out; the superscript names the topology.')),
@@ -73,7 +73,7 @@ export function buildNextStepPage(payload) {
     h('p', {}, ['and those of the reference topology ', Is(), ':']),
     stepTable(uniqueEdges('reference_edges'), payload.topologies?.reference),
     h('p', {}, mt('Here $R_0$ is the common root frame. The transport from the laboratory frame into it is the same for both topologies and drops out of everything below.')),
-    h('h3', { text: 'The paths of the particles' }),
+    h('h3', { text: 'The Paths of the Particles' }),
     h('p', {}, 'The path of a final-state particle is the product of the steps from the root frame to the particle, the step nearest to the root leftmost. These are the paths of this event:'),
     chooser]);
 
@@ -98,7 +98,7 @@ export function buildNextStepPage(payload) {
   }
 
   const shorter = h('div', { class: 'next-part' }, [
-    h('h3', { text: 'A shorter route: three Euler rotations' }),
+    h('h3', { text: 'A Shorter Route: Three Euler Rotations' }),
     h('p', {}, [...mt('Since $W$ is a pure rotation, it does not have to be built from the steps of the chains when only its action on the spin is needed. Like every rotation it is described by three Euler angles ('), link(),
       ...mt('), which are read from its rotation matrix $R$, the spatial block of $W$. It rotates vectors, so its angles are positive. On a spin state of angular momentum $j$ it acts as')]),
     F('W = R_z(α) R_y(β) R_z(γ), U(W) = ε^{2j} e^{−iα J_z} e^{−iβ J_y} e^{−iγ J_z}.'),
@@ -110,7 +110,7 @@ export function buildNextStepPage(payload) {
     h('p', {}, mt('The sign $ε = ±1$ belongs to the lift into spin space. A rotation matrix fixes the operator $U(W)$ only up to a sign: a turn by $2π$ leaves every vector unchanged but multiplies a state of half-integer spin by $−1$, so the angles read from the matrix do not decide between $U$ and $−U$. The sign $ε$ settles it. It is $+1$ if the operator built from the steps of the two chains (their spinor representation) equals the product of the three exponentials above, and $−1$ if it differs from it by a sign. For integer spin it has no effect, since $ε^{2j} = 1$ then; for half-integer spin it is an overall sign of the state.'))]);
 
   const action = h('div', { class: 'next-part' }, [
-    h('h3', { text: 'What this does to the state' }),
+    h('h3', { text: 'What This Does to the State' }),
     h('p', {}, ['Applied to a state of the particle, the rotation gives the Wigner ', sym('D'), ' function. In the helicity basis of ', Is(), ', the state that has the helicity ', sym('ν'), ' in ', Ks(), ' reads']),
     F(`|ν⟩_{${up(K)}} = Σ_λ |λ⟩_{${up(I)}} D^{j}_{λν}(W),`, 'D^{j}_{λν}(W) = ε^{2j} e^{−iλα} d^{j}_{λν}(β) e^{−iνγ}.'),
     h('p', {}, mt('The two rotations about $z$ attach phases, the rotation about $y$ distributes the state over the helicities. If $β = 0$, the helicity axes coincide: every helicity keeps its value, and the two bases differ by a phase. If $β = π$, the helicity is reversed, up to a phase. Otherwise the helicities of the decay topology mix in the reference topology. The sign $ε$ is the sign of the spin lift explained above. The amplitude of the decay topology is converted with one such factor for every final-state particle.'))]);
@@ -119,7 +119,7 @@ export function buildNextStepPage(payload) {
   const selected = h('div', { class: 'next-selected' });
   function buildSelected() {
     const e = run.entry, idx = e.index_markup;
-    const nodes = [h('h3', {}, ['The selected particle ', h('span', { class: 'selection-inline' }, sym(prt(idx)))])];
+    const nodes = [h('h3', {}, ['The Selected Particle ', h('span', { class: 'selection-inline' }, sym(prt(idx)))])];
     if (!e.available) nodes.push(h('p', { text: e.reason }));
     else {
       nodes.push(h('p', {}, ['Its helicity is measured in ', tagNode(e.source_markup), ' in topology ', Ks(), ' and in ', tagNode(e.target_markup), ' in the reference topology ', Is(),
@@ -152,7 +152,7 @@ export function buildNextStepPage(payload) {
     h('div', { class: 'formula amplitude-formula' }, sym(amplitude(false))),
     h('p', {}, ['They describe the same final state, but their helicity labels refer to different frames. The helicity of the particle ', sym(prt(e1.index_markup)), ', for example, is ', sym(`λ_{${e1.index_markup}}`), ' in the first amplitude, measured in ', tagNode(e1.target_markup),
       ', and ', sym(`ν_{${e1.index_markup}}`), ' in the second, measured in ', tagNode(e1.source_markup), '. The two amplitudes can therefore not be summed as they stand. How such an amplitude is built is explained on the page ',
-      h('button', { type: 'button', class: 'link-button', text: 'Amplitude construction', onclick: () => state.showPage('amplitude') }), '; this page builds the rotation ', sym('W'), ' that carries the helicities of the second amplitude into the helicity basis of the first.'])]);
+      h('button', { type: 'button', class: 'link-button', text: 'Amplitude Construction', onclick: () => state.showPage('amplitude') }), '; this page builds the rotation ', sym('W'), ' that carries the helicities of the second amplitude into the helicity basis of the first.'])]);
 
   // ---------------------------------------------------------------- page
   function rebuild() { buildChooser(); buildBuild(); buildSelected(); }
@@ -160,7 +160,7 @@ export function buildNextStepPage(payload) {
     'In the reference topology ', Is(), ' the final-state particles are produced by other decays, so their helicities are measured in other frames, and the helicity states defined there differ by a rotation. ',
     'This page lists the steps by which the frames of both topologies are reached and builds from them the rotation ', sym('W'), ' that carries a spin state of topology ', Ks(), ' into the helicity basis of the reference topology ', Is(), '.']);
   const root = h('div', { class: 'page-body next-box next-single' }, [
-    h('h2', {}, ['Next step: helicities in the reference topology ', h('span', { class: 'sym' }, I)]),
+    h('h2', {}, ['Next Step: Helicities in the Reference Topology ', h('span', { class: 'sym' }, I)]),
     lead, sketches, amplitudes, part1, build, shorter, action, selected]);
   rebuild();
   const view = { stop() {} };
