@@ -80,8 +80,10 @@ function sceneModel(angles, stage, t) {
 
 const OPTIONS = ppu => ({ mode: 'full', planes: { coord: false, particle: false }, labels: true, angles: false, helicities: false, ppu, moving: false });
 
-/** The content of the foldout; `next` tells whether the page "Next step" exists (the text then links to it). */
-export function buildEulerPage({ next = false } = {}) {
+/** The content of the foldout; `next` tells whether the page "Next step" exists (the text then links to it).
+ *  With `parts: true` it does not build the text but returns { figures: the three svgs of the steps, animation: the box of the animation, view, render }; the FAQ (pages/faq) sets them
+ *  where its page needs them. The figures and the animation keep following each other (the angles typed in the animation change the figures). */
+export function buildEulerPage({ next = false, parts = false } = {}) {
   const link = (page, text) => h('button', { type: 'button', class: 'link-button', text, onclick: () => state.showPage(page) });
   const run = { p: 0, playing: null, speed: 1, angles: [50, 40, 60] };
   const rad = () => run.angles.map(a => a*DEG);
@@ -207,6 +209,14 @@ export function buildEulerPage({ next = false } = {}) {
   const heading = h('div', { class: 'euler-heading' });
   const view = { stop: () => { if (run.playing) cancelAnimationFrame(run.playing.frame); run.playing = null; } };
 
+  const animationBox = h('div', { class: 'euler-animation' }, [
+    h('div', { class: 'euler-animation-main' }, [heading, svg, viewTools]),
+    h('div', { class: 'euler-animation-side' }, [h('div', { class: 'step-panel' }, [stepNow, bar, chips]), controls, angleBox])]);
+  if (parts) {
+    buildChips(); updateUi(); requestAnimationFrame(render);
+    return { figures: staticSvgs, animation: animationBox, view, render };
+  }
+
   // ---------------------------------------------------------------- the page
   const M = text => mt(text, true);                                       // inline mathematics, letters in italic everywhere
   const F = (...lines) => h('div', { class: 'formula' }, lines.flatMap((l, i) => i ? [h('br'), sym(l, true)] : [sym(l, true)]));      // displayed formulas
@@ -230,9 +240,7 @@ export function buildEulerPage({ next = false } = {}) {
 
     h('h3', { text: 'Animation' }),
     h('p', {}, M('The animation runs through the same three steps. Choose the angles $α$, $β$, $γ$ (in degrees) and go through the rotations one by one, or let all of them run at once.')),
-    h('div', { class: 'euler-animation' }, [
-      h('div', { class: 'euler-animation-main' }, [heading, svg, viewTools]),
-      h('div', { class: 'euler-animation-side' }, [h('div', { class: 'step-panel' }, [stepNow, bar, chips]), controls, angleBox])]),
+    animationBox,
 
     h('h3', { text: 'From moving axes to fixed axes' }),
     h('p', {}, M('The intrinsic form has a drawback: the generators $J_{y′}$ and $J_Z$ belong to axes that depend on the earlier angles, so the formula cannot be evaluated directly. The remedy is to express the carried axes through rotations about the original ones. The axis $y′$ is the image of $y$ under $R_z(α)$, the axis $Z$ is the image of $z$ under $R_z(α) R_y(β)$, and an observable transforms as $Q′ = R Q R^†$ under a rotation $R$. Hence')),
