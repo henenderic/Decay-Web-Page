@@ -85,6 +85,7 @@ function rebuild() {
   $('page-next').replaceChildren(...(state.pages.next ? [state.pages.next.root] : []));
   $('tab-next').hidden = !state.pages.next;
   if (location.hash === '#euler') state.pages.amplitude.openEuler();              // deep link to the foldout
+  state.pages.faq?.refresh();                                                     // the block for the selected decay on the pages of the FAQ
   showPage(state.page || 'dynamic');
 }
 
@@ -94,12 +95,15 @@ async function init() {
   initDecayForm();
   if (state.config.initial_event) eventToForm(state.config.initial_event);       // an event in the address (?event=...)
   else buildExample();                                                           // otherwise the page starts with random momenta of a decay into three particles
-  $('page-faq').replaceChildren(buildFaqPage().root);                           // the flow chart of the FAQ does not depend on the event
+  state.pages.faq = buildFaqPage();                                              // the flow chart of the FAQ does not depend on the event
+  $('page-faq').replaceChildren(state.pages.faq.root);
   $('event-form').addEventListener('submit', e => { e.preventDefault(); compute({ reveal: true }); });
   $('event-form').addEventListener('input', () => changed());
   $('build-example').addEventListener('click', () => { buildExample(); changed(); });
   document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => { showPage(tab.dataset.tab); history.replaceState(null, '', '#'+tab.dataset.tab); }));
-  state.page = PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : location.hash === '#euler' ? 'amplitude' : 'dynamic';
+  const faqCard = /^#faq-(\d+)$/.exec(location.hash);                              // #faq-3: the tab FAQ with the question 3 chosen
+  state.page = faqCard ? 'faq' : PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : location.hash === '#euler' ? 'amplitude' : 'dynamic';
+  if (faqCard) state.pages.faq.select(Number(faqCard[1]));
   compute();
 }
 init();

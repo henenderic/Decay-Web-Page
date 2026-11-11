@@ -39,6 +39,6 @@ export const FAQ_CARDS = [
 // The reading paths of the outline: the cards that are relevant for a purpose, in the order of their numbers.
 export const FAQ_PATHS = [
   { key: 'apply', label: 'Apply', cards: [1, 2, 3, 17, 24, 28, 30, 31, 32] },
-  { key: 'derive', label: 'Derive', cards: [4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26] },
-  { key: 'implement', label: 'Implement', cards: [5, 6, 7, 19, 22, 23, 24, 27, 29, 32, 33] },
+  { key: 'derive', label: 'Derive', cards: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26] },
+  { key: 'implement', label: 'Implement', cards: [4, 5, 6, 7, 10, 19, 22, 23, 24, 27, 29, 32, 33] },
 ];
