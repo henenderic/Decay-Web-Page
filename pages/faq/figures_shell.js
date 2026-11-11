@@ -10,12 +10,13 @@ const W = 290, S = 105;                                                   // the
 const AZ0 = 32, EL0 = 18;                                                 // the starting view in degrees
 const SPIN = 22;                                                          // degrees per second of the slow turn
 const range = (from, to, n) => Array.from({ length: n+1 }, (_, i) => from+(to-from)*i/n);
+export const SHELL_SPIN = SPIN;
 const dot3 = (a, b) => a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 
 /** A panel with a scene that can be turned. `build(api, view)` draws the scene with api.P (a point of the scene on the drawing), api.poly, api.line, api.fill and api.text; the scene is
  *  drawn again whenever the view changes. `center` is the point about which the scene turns. Returns { root, render, view, state }. */
-function turnable(tag, center, build) {
-  const c = canvas(W, W, 360);
+export function turnable(tag, center, build, { w = W, h: hh = W, s: sc = S, maxWidth = 360 } = {}) {
+  const c = canvas(w, hh, maxWidth);
   c.root.classList.add('turnable');
   const view = { az: AZ0, el: EL0 }, state = { dragging: false };
   const labels = new Map();
@@ -24,22 +25,22 @@ function turnable(tag, center, build) {
     [...c.svg.children].filter(e => e.tagName !== 'defs').forEach(e => e.remove());
     const az = view.az*DEG, el = view.el*DEG;
     const right = [-Math.sin(az), Math.cos(az), 0], up = [-Math.sin(el)*Math.cos(az), -Math.sin(el)*Math.sin(az), Math.cos(el)];
-    const P = (x, y, z) => { const q = [x-center[0], y-center[1], z-center[2]]; return { x: W/2+S*dot3(q, right), y: W/2-S*dot3(q, up) }; };
+    const P = (x, y, z) => { const q = [x-center[0], y-center[1], z-center[2]]; return { x: w/2+sc*dot3(q, right), y: hh/2-sc*dot3(q, up) }; };
     const api = {
       P,
       poly: (pts, o) => c.path(pts.map(p => P(...p)), o),
       line: (a, b, o) => c.line(P(...a), P(...b), o),
       fill: (pts, { color = INK, opacity = .06 } = {}) => svgEl('path', { d: pts.map((p, i) => { const q = P(...p); return `${i ? 'L' : 'M'}${f(q.x)} ${f(q.y)}`; }).join('')+'Z', fill: color, 'fill-opacity': opacity, stroke: 'none' }, c.svg),
-      cross: p => c.cross(P(...p)),
+      cross: (p, o) => c.cross(P(...p), 4.5, o),
       /** A text at an unchanging place of the drawing (pixels), made once. */
       fixed: (key, x, y, tex, o = {}) => { if (!labels.has(key)) labels.set(key, c.label(x, y, tex, { align: 'left', ...o })); },
       /** A text at the point p of the scene, moved by (dx, dy) pixels; `away` moves it by that many pixels away from the middle of the drawing instead. */
       text: (key, p, tex, { dx = 0, dy = 0, away = 0, color = null } = {}) => {
-        const q = P(...p), mx = q.x-W/2, my = q.y-W/2, n = Math.hypot(mx, my) || 1;
+        const q = P(...p), mx = q.x-w/2, my = q.y-hh/2, n = Math.hypot(mx, my) || 1;
         const x = q.x+dx+away*mx/n, y = q.y+dy+away*my/n;
         let node = labels.get(key);
         if (!node) { node = c.label(x, y, tex, { color }); labels.set(key, node); }
-        node.style.left = `${f(x/W*100)}%`; node.style.top = `${f(y/W*100)}%`;
+        node.style.left = `${f(x/w*100)}%`; node.style.top = `${f(y/hh*100)}%`;
       }
     };
     build(api);
@@ -62,15 +63,15 @@ function turnable(tag, center, build) {
 }
 
 /** The three axes with arrowheads (positive halves) and the negative halves dashed, with their names. */
-function axes(api, names, down) {
-  const tips = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+export function axes(api, names, down, top = 1) {
+  const tips = [[1, 0, 0], [0, 1, 0], [0, 0, top]];
   tips.forEach((t, k) => { api.line([0, 0, 0], t, { arrow: true }); api.text(`axis${k}`, t, names[k], { away: 13 }); });
   api.line([0, 0, 0], [-1, 0, 0], { dash: true, width: 1.2 }); api.line([0, 0, 0], [0, -1, 0], { dash: true, width: 1.2 }); api.line([0, 0, 0], [0, 0, -down], { dash: true, width: 1.2 });
 }
 
 /** The vector from the origin to the point v with its shadow in the plane of the first two axes (a grey arrow, with a dashed line from the tip down to the tip of the shadow) and the
  *  dashed lines of the shadow to the axes. */
-function vectorWithShadow(api, v, name) {
+export function vectorWithShadow(api, v, name) {
   const [x, y, z] = v;
   api.line([x, y, z], [x, y, 0], { dash: true, width: 1.2 });
   api.line([x, y, 0], [x, 0, 0], { dash: true, width: 1.2 });
