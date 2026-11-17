@@ -17,7 +17,7 @@ export const FAQ_CARDS = [
   { n: 13, title: 'What Are S- and T-Matrix?', x: 260, y: 580, w: 140, h: 80, needs: [12], neededBy: [14, 15, 23], see: [2, 25] },
   { n: 14, title: 'How to Write the Lippmann–Schwinger Equation as a Matrix Equation?', x: 440, y: 580, w: 140, h: 80, needs: [13], neededBy: [16, 25], see: [3, 12, 17, 24] },
   { n: 15, title: 'How Is the Matrix Element Defined?', x: 620, y: 580, w: 140, h: 80, needs: [8, 13], neededBy: [18, 20, 25], see: [32] },
-  { n: 16, title: 'How Does LSE Lead to a Sum of Decay Chains?', x: 800, y: 580, w: 140, h: 80, needs: [3, 9, 14], neededBy: [17, 18, 28, 30], see: [8, 24, 33] },
+  { n: 16, title: 'How Does the Bethe–Salpeter Equation Lead to a Sum of Decay Chains?', x: 800, y: 580, w: 140, h: 80, needs: [3, 9, 14], neededBy: [17, 18, 28, 30], see: [8, 24, 25, 26, 33] },
   { n: 17, title: 'What Are Decay Topology and Decay Chain?', x: 980, y: 580, w: 140, h: 80, needs: [6, 11, 16], neededBy: [27, 30], see: [1, 3, 14, 18, 20, 24] },
   { n: 18, title: 'How to Build a Two-Particle Decay Amplitude?', x: 80, y: 750, w: 140, h: 80, needs: [6, 7, 9, 10, 15, 16], neededBy: [19, 20, 27], see: [3, 5, 17, 28] },
   { n: 19, title: 'What Are Partial Waves and Helicity Couplings?', x: 260, y: 750, w: 140, h: 80, needs: [7, 18], neededBy: [28], see: [1, 23, 32] },
