@@ -20,7 +20,7 @@ export default [
  },
  {
   "type": "p",
-  "text": "In a chain, every vertex is a two-body decay in the cascade-decay isobar assumption: at the vertex $(v)$ a particle $A_{\\mathrm p/\\mathrm i}^{(v)}$ with the spin $j_{A^{(v)}}$ decays into the so-called **reference particle** $a_{\\mathrm p/\\mathrm i}^{(v)}$ and a second particle $b_{\\mathrm p/\\mathrm i}^{(v)}$ that is termed **spectator**. The label $\\mathrm p/\\mathrm i$ says that such a particle is either a final-state particle ($\\mathrm p$) or an **intermediate state** ($\\mathrm i$), while the superscript $(v)$ states the vertex this particle takes part in. Every intermediate state can be populated by different resonances. Which resonances will be allowed is discussed in theory on a different card ([[2]]). A chain is therefore fixed by its topology $\\mathrm K$ and by the combination $\\alpha$ of the resonances in all its intermediate states. A topology can be built with more than one such combination. The general chain amplitude of a cascade chain is given through"
+  "text": "In a chain, every vertex is a two-body decay in the cascade-decay isobar assumption: at the vertex $(v)$ a particle $A_{\\mathrm p/\\mathrm i}^{(v)}$ with the spin $j_{A^{(v)}}$ decays into the so-called **reference particle** $a_{\\mathrm p/\\mathrm i}^{(v)}$ and a second particle $b_{\\mathrm p/\\mathrm i}^{(v)}$ that is termed **spectator**. Such a vertex is the effective description of the two-body decay of a particle and not a vertex of a fundamental interaction ([[16]]). The label $\\mathrm p/\\mathrm i$ says that such a particle is either a final-state particle ($\\mathrm p$) or an **intermediate state** ($\\mathrm i$), while the superscript $(v)$ states the vertex this particle takes part in. Every intermediate state can be populated by different resonances. Which resonances will be allowed is discussed in theory on a different card ([[2]]). A chain is therefore fixed by its topology $\\mathrm K$ and by the combination $\\alpha$ of the resonances in all its intermediate states. A topology can be built with more than one such combination. The general chain amplitude of a cascade chain is given through"
  },
  {
   "type": "eq",
@@ -57,7 +57,7 @@ export default [
  },
  {
   "type": "p",
-  "text": "The sum over the helicity $\\lambda_R$ of an intermediate state encloses the whole product, because this helicity appears twice: in the vertex that produces the intermediate state and in the vertex in which it decays, where it is not measurable. Thus, to include all possible helicity values, one needs to sum over it."
+  "text": "The sum over the helicity $\\lambda_R$ of an intermediate state encloses the whole product, because this helicity appears twice: in the vertex that produces the intermediate state and in the vertex in which it decays, where it is not measurable. The sum has one term for every helicity state of the intermediate state: it comes from the structure of the pole of its propagator ([[16]])."
  },
  {
   "type": "p",
