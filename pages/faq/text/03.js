@@ -7,7 +7,7 @@ export default [
  },
  {
   "type": "p",
-  "text": "Every vertex stands for an operator $V$, every double line for a propagator $G$ and every particle that takes no part in a step for the identity $\\one$. The operators are multiplied. The first decay stands on the right. Why consecutive decays can be multiplied in this way follows from scattering theory and is explained in [[14]] and [[16]]."
+  "text": "Every vertex stands for a **kernel** $K$, every double line for a propagator $G$ and every particle that takes no part in a step for the identity $\\one$. A kernel is the effective description of one decay and not the vertex of a fundamental interaction: it is the part of a step that cannot be split into two consecutive steps. The factors are multiplied as operators. The first decay stands on the right. Why consecutive decays can be multiplied in this way follows from scattering theory and is explained in [[14]] and [[16]]."
  },
  {
   "type": "h",
@@ -45,7 +45,7 @@ export default [
    [
     "Filled dot",
     "A vertex, for example $(12)_\\mathrm v$: one line enters, the decay products leave.",
-    "A vertex operator, $V_{(12)_\\mathrm v}$"
+    "A kernel, $K_{(12)_\\mathrm i\\to1_\\mathrm p2_\\mathrm p}$"
    ],
    [
     "Hatched area / \"Blob\"",
@@ -121,7 +121,7 @@ export default [
  },
  {
   "type": "p",
-  "text": "A decay of $0_\\mathrm p$ into $1_\\mathrm p$ and $2_\\mathrm p$ is a single vertex, $(12)_\\mathrm v$. It gives one **operator**, $V_{(12)_\\mathrm v}$, that turns the state of one particle into the state of two particles. Its matrix element between these states is the **decay amplitude** of the vertex ([[18]])."
+  "text": "A decay of $0_\\mathrm p$ into $1_\\mathrm p$ and $2_\\mathrm p$ is a single vertex, $(12)_\\mathrm v$. It gives one **operator**, the kernel $K_{0_\\mathrm p\\to1_\\mathrm p2_\\mathrm p}$, that turns the state of one particle into the state of two particles. Its matrix element between these states is the **decay amplitude** of the vertex ([[18]])."
  },
  {
   "type": "h",
@@ -134,7 +134,7 @@ export default [
  },
  {
   "type": "eq",
-  "tex": "\\big(V_{(12)_\\mathrm v}\\otimes\\one_{3_\\mathrm p}\\big)\\big(G_{(12)_\\mathrm i}\\otimes\\one_{3_\\mathrm p}\\big)\\,V_{((12)3)_\\mathrm v}\\tag{3.1}"
+  "tex": "\\big(K_{(12)_\\mathrm i\\to1_\\mathrm p2_\\mathrm p}\\otimes\\one_{3_\\mathrm p}\\big)\\big(G_{(12)_\\mathrm i}\\otimes\\one_{3_\\mathrm p}\\big)\\,K_{0_\\mathrm p\\to(12)_\\mathrm i3_\\mathrm p}\\tag{3.1}"
  },
  {
   "type": "p",
@@ -157,7 +157,7 @@ export default [
  },
  {
   "type": "eq",
-  "tex": "\\begin{aligned}\nT_{123}={}&V_{(123)_\\mathrm v}\\\\\n&+\\sum_\\alpha\\big(V^{\\alpha}_{(12)_\\mathrm v}\\otimes\\one_{3_\\mathrm p}\\big)\\big(G^{\\alpha}_{(12)_\\mathrm i}\\otimes\\one_{3_\\mathrm p}\\big)V^{\\alpha}_{((12)3)_\\mathrm v}\\\\\n&+\\sum_\\beta\\big(V^{\\beta}_{(13)_\\mathrm v}\\otimes\\one_{2_\\mathrm p}\\big)\\big(G^{\\beta}_{(13)_\\mathrm i}\\otimes\\one_{2_\\mathrm p}\\big)V^{\\beta}_{((13)2)_\\mathrm v}\\\\\n&+\\sum_\\gamma\\big(V^{\\gamma}_{(23)_\\mathrm v}\\otimes\\one_{1_\\mathrm p}\\big)\\big(G^{\\gamma}_{(23)_\\mathrm i}\\otimes\\one_{1_\\mathrm p}\\big)V^{\\gamma}_{((23)1)_\\mathrm v}\n\\end{aligned}\\tag{3.2}"
+  "tex": "\\begin{aligned}\nT_{123}={}&K_{0_\\mathrm p\\to1_\\mathrm p2_\\mathrm p3_\\mathrm p}\\\\\n&+\\sum_\\alpha\\big(K^{\\alpha}_{(12)_\\mathrm i\\to1_\\mathrm p2_\\mathrm p}\\otimes\\one_{3_\\mathrm p}\\big)\\big(G^{\\alpha}_{(12)_\\mathrm i}\\otimes\\one_{3_\\mathrm p}\\big)K^{\\alpha}_{0_\\mathrm p\\to(12)_\\mathrm i3_\\mathrm p}\\\\\n&+\\sum_\\beta\\big(K^{\\beta}_{(13)_\\mathrm i\\to1_\\mathrm p3_\\mathrm p}\\otimes\\one_{2_\\mathrm p}\\big)\\big(G^{\\beta}_{(13)_\\mathrm i}\\otimes\\one_{2_\\mathrm p}\\big)K^{\\beta}_{0_\\mathrm p\\to(13)_\\mathrm i2_\\mathrm p}\\\\\n&+\\sum_\\gamma\\big(K^{\\gamma}_{(23)_\\mathrm i\\to2_\\mathrm p3_\\mathrm p}\\otimes\\one_{1_\\mathrm p}\\big)\\big(G^{\\gamma}_{(23)_\\mathrm i}\\otimes\\one_{1_\\mathrm p}\\big)K^{\\gamma}_{0_\\mathrm p\\to(23)_\\mathrm i1_\\mathrm p}\n\\end{aligned}\\tag{3.2}"
  },
  {
   "type": "p",
@@ -174,7 +174,7 @@ export default [
  },
  {
   "type": "p",
-  "text": "An operator such as $V_{(12)_\\mathrm v}$ is defined for the particles that take part in the decay only. To let it act on the state of all three particles, it is combined with the identity on the others, $V_{(12)_\\mathrm v}\\otimes\\one_{3_\\mathrm p}$. The **identity** means no interaction: the particle keeps its momentum and its helicity."
+  "text": "A kernel such as $K_{(12)_\\mathrm i\\to1_\\mathrm p2_\\mathrm p}$ is defined for the particles that take part in the decay only. To let it act on the state of all three particles, it is combined with the identity on the others, $K_{(12)_\\mathrm i\\to1_\\mathrm p2_\\mathrm p}\\otimes\\one_{3_\\mathrm p}$. The **identity** means no interaction: the particle keeps its momentum and its helicity."
  },
  {
   "type": "p",
@@ -232,7 +232,7 @@ export default [
    },
    {
     "n": 14,
-    "text": "The equation behind the sketches."
+    "text": "The equation behind the sketches and its step to the Bethe–Salpeter equation."
    },
    {
     "n": 16,
@@ -244,7 +244,7 @@ export default [
    },
    {
     "n": 18,
-    "text": "The operator of a single vertex, written out."
+    "text": "The kernel of a single vertex, written out."
    },
    {
     "n": 20,

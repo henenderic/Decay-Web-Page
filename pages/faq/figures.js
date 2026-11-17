@@ -84,9 +84,9 @@ function figure31() {
 /** Figure 3.2: the same sketch with the factor of every element. */
 function figure32() {
   const c = sketchCanvas(T_12_3, { labels: 'names', room: { bottom: .85, left: .1, top: .2, right: .15 } });
-  c.label(-.08, -.32, String.raw`V_{${names.v12_3}}`, { align: 'right' });
+  c.label(-.08, -.32, String.raw`K_{0_\mathrm p\to(12)_\mathrm i3_\mathrm p}`, { align: 'right' });
   c.label(.38, .88, String.raw`G_{${names.i12}}`, { align: 'right' });
-  c.label(.92, 1.12, String.raw`V_{${names.v12}}`, { align: 'right' });
+  c.label(.92, 1.12, String.raw`K_{(12)_\mathrm i\to1_\mathrm p2_\mathrm p}`, { align: 'right' });
   c.label(.38, -.8, String.raw`\one_{3_\mathrm p}`, { align: 'right' });
   const y = -1.42;
   c.line(1.7, y, .1, y, { arrow: true });

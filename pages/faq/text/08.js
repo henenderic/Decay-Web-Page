@@ -62,7 +62,7 @@ export default [
  },
  {
   "type": "p",
-  "text": "It is used wherever a state is split into helicity states, for example in the internal helicity sums of card [[16]]. The relation belongs to one particle with a fixed mass and spin. A sum over particle types or over $j$ does not appear as a consequence of particles not changing particle types without transitioning in an  inelastic operator. The relation for two particles is shown in card [[9]]."
+  "text": "It is used wherever the state of a stable particle is split into helicity states. The relation belongs to one particle with a fixed mass and spin. A sum over particle types or over $j$ does not appear as a consequence of particles not changing particle types without transitioning in an  inelastic operator. The relation for two particles is shown in card [[9]]. A resonance is not a stable particle and does not appear in this relation. The helicity sum of an intermediate resonance in a chain comes from the pole of its propagator ([[16]])."
  },
  {
   "type": "h",
@@ -119,7 +119,7 @@ export default [
    },
    {
     "n": 16,
-    "text": "The internal helicity sums from the completeness relation."
+    "text": "The sums over the internal helicities of a decay chain."
    }
   ]
  },
